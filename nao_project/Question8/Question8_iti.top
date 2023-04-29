@@ -1,0 +1,14 @@
+topic: ~Question8()
+language: iti
+
+# Defining extra concepts out of words or group of words
+#concept:(hello) [hello hi hey "good morning" greetings]
+
+# Catching inputs and triggering outputs
+#u:(e:onStart) $onStopped=1
+
+# Replying to speech
+#u:(~hello) ~hello
+
+u:(Ciao [NAO robot]) Ciao, sono pronto a rispondere alle tue domande.
+u:(Il quadro la porta del purgatorio si ispira a quale frase?) Vidi una porta, tre gradi di sotto per gire ad essa, di color diversi,e un portier ch’ancor non facea motto. $onStopped=1
