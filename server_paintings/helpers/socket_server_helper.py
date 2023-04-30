@@ -31,13 +31,6 @@ class SocketServer:
     ip: str
     port: int
 
-    ''' Possible codes:
-    * -1: NAO is moving
-    *  0: NAO is in home base
-    * 1-10: Number of painting described
-    '''
-    status: int
-
     clients: List[SocketClient] = []
 
     s: socket.socket
@@ -100,15 +93,4 @@ class SocketServer:
 
 
 def manage_message(message):
-    source, body, destination = message.split('_')
-
-    if (source == 'app' and destination == 'arduino' and body in [str(i) for i in range(1, 11)]):
-        status = -1
-    elif ('arduino' in source and 'nao' in destination and body in [str(i) for i in range(1, 11)]):
-        status = int(body)
-        WebBrowser.open_window(body)
-    elif (source == 'nao' and destination == 'arduino' and body in [str(i) for i in range(1, 11)]):
-        status = -1
-        WebBrowser.close_window()
-    elif (source == 'arduino' and destination == 'app' and body in [str(i) for i in range(1, 11)]):
-        status = 0
+    pass
