@@ -1,7 +1,6 @@
 import time
 import yaml
-
-from os import path
+import json
 
 
 def getElapsedTime(startTime):
@@ -17,3 +16,8 @@ def getElapsedTime(startTime):
 def read_yaml(file_path):
     with open(file_path, 'r') as f:
         return yaml.safe_load(f)
+
+
+def read_json(file_path):
+    with open(file_path, 'r') as f:
+        return json.loads(f.read())

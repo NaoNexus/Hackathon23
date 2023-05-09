@@ -1,6 +1,6 @@
 from helpers.config_helper import Config
+from helpers.dialogue_helper import DialogueHelper
 from helpers.logging_helper import logger
-from helpers.web_browser_helper import WebBrowser
 
 import sys
 import socket
@@ -33,11 +33,15 @@ class SocketServer:
 
     clients: List[SocketClient] = []
 
+    dialogue_helper: DialogueHelper
+
     s: socket.socket
 
     def __init__(self, config: Config):
         self.ip = config.socket_ip
         self.port = config.socket_port
+
+        self.dialogue_helper = DialogueHelper()
 
         self.start_server()
 
@@ -78,6 +82,9 @@ class SocketServer:
 
         self.clients.append(client)
 
+        if (len(self.clients) == self.dialogue_helper.actors):
+            self.dialogue_helper.next_index('')
+
         try:
             client.run()
         except Exception as e:
@@ -88,9 +95,7 @@ class SocketServer:
         self.clients.remove(client)
 
     def on_received_message(self, message):
-        self.send_to_all_clients(message)
-        manage_message(message)
-
-
-def manage_message(message):
-    pass
+        result = self.dialogue_helper.next_index(message.split('_')[0])
+        if len(result) != 0 and result[0] != 'none':
+            for message in result:
+                self.send_to_all_clients(message)

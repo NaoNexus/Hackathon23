@@ -1,12 +1,25 @@
 # File to test socket
 import socket
 
-IP = '192.168.0.101'
+IP = 'localhost'
 PORT = 5050
 
 if __name__ == '__main__':
-    message = input("Inserisci il messaggio da inviare: ")
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.bind((IP, PORT))
+        s.listen()
 
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.connect((IP, PORT))
-    s.send(message.encode())
+        conn, addr = s.accept()
+        
+        with conn:
+            print(f"Connected by {addr}")
+            while True:
+                user = input()
+
+                data = conn.recv(1024)
+
+                if data:
+                    print(data)
+
+                if user:
+                    conn.sendall(data)
