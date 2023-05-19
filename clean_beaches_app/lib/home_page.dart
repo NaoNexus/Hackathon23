@@ -1,3 +1,4 @@
+import 'package:clean_beaches_app/relative_date.dart';
 import 'package:clean_beaches_app/report.dart';
 import 'package:clean_beaches_app/utilities.dart';
 import 'package:flutter/material.dart';
@@ -203,12 +204,12 @@ class BeachReportCard extends StatelessWidget {
                 ),
               ],
             ),
-            const Row(
+            Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Text(
-                  '5h ago',
-                  style: TextStyle(
+                  report.date.relativeDateString,
+                  style: const TextStyle(
                     fontSize: 14,
                     color: Colors.grey,
                   ),
