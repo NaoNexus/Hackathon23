@@ -108,6 +108,7 @@ class _LoginPageState extends State<LoginPage> {
                             .colorScheme!
                             .secondaryContainer,
                         child: InkWell(
+                          borderRadius: BorderRadius.circular(8),
                           onTap: () async {
                             if (_formKey.currentState!.validate()) {
                               try {

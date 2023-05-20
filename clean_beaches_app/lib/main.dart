@@ -100,12 +100,10 @@ class Home extends StatelessWidget {
     String nickname = prefs.getString('nickname') ?? '';
     String password = prefs.getString('password') ?? '';
     try {
-      return Api(ip: ip, port: port)
-          .login(
-            nickname: nickname,
-            password: password,
-          )
-          .toString();
+      return Api(ip: ip, port: port).login(
+        nickname: nickname,
+        password: password,
+      );
     } catch (e) {
       log(e.toString());
       return null;
