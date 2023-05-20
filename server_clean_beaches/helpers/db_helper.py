@@ -162,7 +162,7 @@ class DB:
 
                 return cur.statusmessage
 
-    def get_beaches_reports(self):
+    def get_beaches_reports(self, includeImages):
         with self.connection:
             with self.connection.cursor() as cur:
                 data = []
@@ -172,8 +172,9 @@ class DB:
 
                 for tupla in cur:
                     beach_report = json_to_beach(tupla)
-                    beach_report = self.file_helper.save_beach_report_images(
-                        beach_report)
+                    if (includeImages):
+                        beach_report = self.file_helper.get_beach_report_images(
+                            beach_report)
                     data.append(beach_report)
 
                 return data

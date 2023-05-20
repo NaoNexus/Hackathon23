@@ -9,15 +9,22 @@ from flask import Flask, request, jsonify, render_template, redirect
 
 app = Flask(__name__)
 
+
+@app.after_request
+def after_request(response):
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    response.headers.add('Access-Control-Allow-Headers',
+                         'Content-Type,Authorization')
+    response.headers.add('Access-Control-Allow-Methods',
+                         'GET,PUT,POST,DELETE,OPTIONS')
+    return response
+
 # Web App calls
 
 
 @app.route('/', methods=['GET'])
 def index():
-
-    reports = db_helper.get_reports()
-
-    return render_template('index.html', reports=reports)
+    return render_template('index.html')
 
 
 '''@app.route('/reports', methods=['GET'])
@@ -150,7 +157,8 @@ def report(id):
 @app.route('/api/reports', methods=['GET'])
 def reports():
     try:
-        return jsonify({'code': 200, 'message': 'OK', 'data': db_helper.get_beaches_reports()}), 200
+        includeImages = request.args.get('images', '') == 'false'
+        return jsonify({'code': 200, 'message': 'OK', 'data': db_helper.get_beaches_reports(includeImages)}), 200
     except Exception as e:
         logger.error(str(e))
         return jsonify({'code': 500, 'message': str(e)}), 500

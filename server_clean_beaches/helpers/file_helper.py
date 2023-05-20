@@ -32,11 +32,11 @@ class FileHelper:
 
     def get_beach_report_images(self, report):
         if (report.get('dirtyImageExtension', '') != ''):
-            report['dirtyImage'] = self.encode_image(
-                f'images/{report["id"]}/dirty.{report.get("dirtyImageExtension", "jpeg")}')
+            report['dirtyImage'] = str(self.encode_image(
+                f'images/{report["id"]}/dirty.{report.get("dirtyImageExtension", "jpeg")}'))
 
         if (report.get('cleanImageExtension', '') != ''):
-            report['cleanImage'] = self.encode_image(
-                f'images/{report["id"]}/clean.{report["cleanImageExtension"]}')
+            report['cleanImage'] = str(self.encode_image(
+                f'images/{report["id"]}/clean.{report["cleanImageExtension"]}'))
 
         return report
