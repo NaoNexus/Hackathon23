@@ -1,10 +1,8 @@
-import 'package:clean_beaches_app/register_page.dart';
-import 'package:flutter/gestures.dart';
+import 'package:clean_beaches_app/utilities.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'api.dart';
-import 'home_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -14,16 +12,25 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final TextEditingController usernameController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+  final TextEditingController _nicknameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
-  final String ip = '192.168.0.150';
-  final int port = 5000;
+  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+  late Api _api;
+
+  final GlobalKey<FormState> _formKey = GlobalKey();
+
+  final String _ip = '192.168.0.150';
+  final int _port = 5000;
 
   @override
-  GestureDetector build(BuildContext context) {
-    final Api api = Api(ip: ip, port: port);
+  void initState() {
+    _api = Api(ip: _ip, port: _port);
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
         final currentFocus = FocusScope.of(context);
@@ -32,100 +39,156 @@ class _LoginPageState extends State<LoginPage> {
         }
       },
       child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text(
-                'Clean Beaches',
-                style: TextStyle(
-                  fontSize: 40,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 20),
-              const Text(
-                'Login',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 20),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: TextFormField(
-                  controller: usernameController,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Nickname',
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: TextFormField(
-                  obscureText: true,
-                  controller: passwordController,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Password',
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  if (api
-                          .checkUsernameAndPassword(
-                            usernameController.text,
-                            passwordController.text,
-                          )
-                          .toString() ==
-                      'OK') {
-                    _prefs.then(
-                      (SharedPreferences prefs) {
-                        prefs.setString('nickname', usernameController.text);
-                        prefs.setString('password', passwordController.text);
-                      },
-                    );
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const HomePage()));
-                  }
-                },
-                child: const Text('Login'),
-              ),
-              const SizedBox(height: 20),
-              RichText(
-                text: TextSpan(
-                  text: 'Don\' t have an account? ',
-                  style: const TextStyle(
-                    color: Colors.grey,
-                    fontSize: 13,
-                  ),
-                  children: <TextSpan>[
-                    TextSpan(
-                      text: 'Sign up',
-                      style: const TextStyle(
-                        color: Colors.blue,
-                        fontSize: 13,
+        body: Container(
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/logo_green.png'),
+              fit: BoxFit.contain,
+              opacity: 0.1,
+            ),
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Center(
+            child: SingleChildScrollView(
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Login',
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.secondary,
+                        fontSize: 32,
+                        fontWeight: FontWeight.w500,
                       ),
-                      recognizer: TapGestureRecognizer()
-                        ..onTap = () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const RegisterPage()));
-                        },
+                    ),
+                    const SizedBox(height: 32),
+                    TextFormField(
+                      controller: _nicknameController,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        contentPadding: const EdgeInsets.all(16),
+                        labelText: 'Nickname',
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'A nickname must be entered';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 16),
+                    TextFormField(
+                      controller: _passwordController,
+                      obscureText: true,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        contentPadding: const EdgeInsets.all(16),
+                        labelText: 'Password',
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'A password must be entered';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 32),
+                    SizedBox(
+                      width: double.infinity,
+                      child: Material(
+                        borderRadius: BorderRadius.circular(8),
+                        color: Theme.of(context)
+                            .buttonTheme
+                            .colorScheme!
+                            .secondaryContainer,
+                        child: InkWell(
+                          onTap: () async {
+                            if (_formKey.currentState!.validate()) {
+                              try {
+                                String result = await _api.login(
+                                  nickname: _nicknameController.text,
+                                  password: _passwordController.text,
+                                );
+
+                                if (result == 'OK') {
+                                  _prefs.then((SharedPreferences prefs) {
+                                    prefs.setString(
+                                        'nickname', _nicknameController.text);
+                                    prefs.setString(
+                                        'password', _passwordController.text);
+                                  });
+
+                                  Navigator.popAndPushNamed(context, '/home');
+                                }
+                              } catch (e) {
+                                showSnackBar(
+                                  context: context,
+                                  text: e.toString(),
+                                  icon: Icons.error_outline,
+                                  backgroundColor: Theme.of(context)
+                                      .buttonTheme
+                                      .colorScheme!
+                                      .errorContainer,
+                                  color: Theme.of(context)
+                                      .buttonTheme
+                                      .colorScheme!
+                                      .onErrorContainer,
+                                );
+                              }
+                            }
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            child: Text(
+                              'LOGIN',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .onSecondaryContainer,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                letterSpacing: 1.5,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.popAndPushNamed(context, '/register');
+                      },
+                      child: RichText(
+                        text: const TextSpan(
+                          text: "Don't have an account? ",
+                          style: TextStyle(
+                            color: Colors.grey,
+                            fontSize: 14,
+                          ),
+                          children: <TextSpan>[
+                            TextSpan(
+                              text: 'Register',
+                              style: TextStyle(
+                                color: Colors.blue,
+                                fontSize: 14,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                   ],
                 ),
               ),
-            ],
+            ),
           ),
         ),
       ),

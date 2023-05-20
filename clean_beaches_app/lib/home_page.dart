@@ -30,6 +30,12 @@ class _HomePageState extends State<HomePage> {
   }
 
   @override
+  void dispose() {
+    _mapController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
@@ -46,8 +52,8 @@ class _HomePageState extends State<HomePage> {
                       FlutterMap(
                         mapController: _mapController,
                         options: MapOptions(
-                          center: _currentLocation,
-                          zoom: 13,
+                          zoom: 10,
+                          slideOnBoundaries: true,
                         ),
                         children: [
                           TileLayer(
@@ -106,15 +112,15 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> getLocation() async {
-    await Geolocator
-        .requestPermission(); //RIGA DEL CAZZO CI HO PERSO DUE ORE E MEZZA E NON AVEVO CHIESTO IL PERMESSOOOOOOOO
+    await Geolocator.requestPermission();
 
     Position position = await Geolocator.getCurrentPosition(
       desiredAccuracy: LocationAccuracy.high,
     );
-    setState(() {
-      _currentLocation = LatLng(position.latitude, position.longitude);
-    });
+
+    _currentLocation = LatLng(position.latitude, position.longitude);
+
+    centerMap();
   }
 }
 

@@ -1,4 +1,5 @@
 import 'package:clean_beaches_app/report.dart';
+import 'package:flutter/material.dart';
 import 'package:latlong2/latlong.dart';
 
 final testData = [
@@ -11,3 +12,42 @@ final testData = [
     imagePath: '',
   ),
 ];
+
+void showSnackBar({
+  required BuildContext context,
+  required String text,
+  IconData? icon,
+  Color? backgroundColor,
+  Color? color,
+}) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      behavior: SnackBarBehavior.floating,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+      ),
+      backgroundColor:
+          backgroundColor ?? Theme.of(context).snackBarTheme.backgroundColor,
+      content: Row(
+        children: [
+          if (icon != null) ...[
+            Icon(
+              icon,
+              color: color ?? Theme.of(context).snackBarTheme.actionTextColor,
+            ),
+            const SizedBox(width: 8),
+          ],
+          Expanded(
+            child: Text(
+              text,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: color ?? Theme.of(context).snackBarTheme.actionTextColor,
+              ),
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
+}
