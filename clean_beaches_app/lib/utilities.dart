@@ -5,7 +5,7 @@ final testData = [
   Report(
     id: '12dd',
     position: LatLng(45.435651, 10.993239),
-    cleaned: true,
+    cleaned: false,
     date: DateTime(2023, 12, 10),
     details: 'Spiaggia della morte',
     imagePath: '',

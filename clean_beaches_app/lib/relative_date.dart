@@ -1,5 +1,5 @@
 extension RelativeDate on DateTime {
-  String getRelativeDateString() {
+  String? getRelativeDateString() {
     Duration duration = difference(DateTime.now());
   }
 }
