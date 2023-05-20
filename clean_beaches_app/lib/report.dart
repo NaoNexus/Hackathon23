@@ -16,13 +16,13 @@ class Report {
     required this.details,
     required this.imagePath,
   });
-
-  /*factory Report.fromJson(Map<String, dynamic> json) => Report(
+/* 
+  factory Report.fromJson(Map<String, dynamic> json) => Report(
         id: json['id'],
         position: position,
         cleaned: cleaned,
         date: date,
         details: details,
         imagePath: imagePath,
-      );*/
+      ); */
 }

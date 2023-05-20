@@ -4,7 +4,7 @@ import 'package:clean_beaches_app/utilities.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:location/location.dart';
+import 'package:geolocator/geolocator.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({
@@ -20,9 +20,12 @@ class _HomePageState extends State<HomePage> {
 
   List<Report> _visualizedReports = [];
 
+  LatLng _currentLocation = LatLng(45.345, -122.55);
+
   @override
   void initState() {
     _visualizedReports = testData;
+    getLocation();
     super.initState();
   }
 
@@ -41,11 +44,11 @@ class _HomePageState extends State<HomePage> {
                   child: Stack(
                     children: [
                       FlutterMap(
+                        mapController: _mapController,
                         options: MapOptions(
-                          center: LatLng(45.5231, -122.6765),
+                          center: _currentLocation,
                           zoom: 13,
                         ),
-                        mapController: _mapController,
                         children: [
                           TileLayer(
                             urlTemplate:
@@ -65,13 +68,13 @@ class _HomePageState extends State<HomePage> {
                           ),
                           padding: const EdgeInsets.all(8),
                           child: InkWell(
-                            child: const Icon(
-                              Icons.my_location_outlined,
-                              color: Colors.blue,
+                            child: GestureDetector(
+                              onTap: () => centerMap(),
+                              child: const Icon(
+                                Icons.my_location_outlined,
+                                color: Colors.blue,
+                              ),
                             ),
-                            onTap: () {
-                              centerMap();
-                            },
                           ),
                         ),
                       ),
@@ -98,36 +101,20 @@ class _HomePageState extends State<HomePage> {
   }
 
   void centerMap() async {
-    LatLng position = await getLocation() ?? LatLng(0, 0);
-    _mapController.move(position, 13);
+    await getLocation();
+    _mapController.move(_currentLocation, 13);
   }
 
-  Future<LatLng?> getLocation() async {
-    Location location = Location();
+  Future<void> getLocation() async {
+    await Geolocator
+        .requestPermission(); //RIGA DEL CAZZO CI HO PERSO DUE ORE E MEZZA E NON AVEVO CHIESTO IL PERMESSOOOOOOOO
 
-    bool serviceEnabled;
-    PermissionStatus permissionGranted;
-    LocationData locationData;
-
-    serviceEnabled = await location.serviceEnabled();
-    if (!serviceEnabled) {
-      serviceEnabled = await location.requestService();
-      if (!serviceEnabled) {
-        return null;
-      }
-    }
-
-    permissionGranted = await location.hasPermission();
-    if (permissionGranted == PermissionStatus.denied) {
-      permissionGranted = await location.requestPermission();
-      if (permissionGranted != PermissionStatus.granted) {
-        return null;
-      }
-    }
-
-    locationData = await location.getLocation();
-
-    return LatLng(locationData.latitude ?? 0, locationData.longitude ?? 0);
+    Position position = await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high,
+    );
+    setState(() {
+      _currentLocation = LatLng(position.latitude, position.longitude);
+    });
   }
 }
 
