@@ -4,8 +4,9 @@ from helpers.logging_helper import logger
 
 import utilities
 import time
+import os
 
-from flask import Flask, request, jsonify, render_template, redirect
+from flask import Flask, request, current_app, jsonify, render_template, redirect, send_from_directory
 
 app = Flask(__name__)
 
@@ -52,6 +53,17 @@ def report_screen(id):
             return redirect("/reports", code=500)
 
     return redirect("/reports", code=404)'''
+
+
+@app.route('/images/<path:filename>', methods=['GET', 'POST'])
+def download(filename):
+    try:
+        print(os.path.dirname(app.instance_path))
+        uploads = os.path.join(os.path.dirname(app.instance_path), 'images/')
+        logger.info(uploads)
+        return send_from_directory(uploads, filename)
+    except Exception as e:
+        logger.error(e)
 
 # Api calls
 # Reports calls
