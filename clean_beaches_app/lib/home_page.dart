@@ -1,3 +1,5 @@
+import 'dart:html';
+
 import 'package:clean_beaches_app/relative_date.dart';
 import 'package:clean_beaches_app/report.dart';
 import 'package:clean_beaches_app/report_details_page.dart';
