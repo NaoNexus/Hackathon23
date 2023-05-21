@@ -77,7 +77,7 @@
                 map.removeLayer(marker)
             }
 
-            let response = await fetch('http://192.168.0.150:5000/api/reports?includeImages=false')
+            let response = await fetch('http://192.168.0.150:5000/api/reports?images=false')
             reports = (await response.json())['data']
             console.log(reports)
             for (let report of reports) {

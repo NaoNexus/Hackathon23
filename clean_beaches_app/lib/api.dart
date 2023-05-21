@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:typed_data';
 
 import 'package:camera/camera.dart';
+import 'package:clean_beaches_app/report.dart';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
@@ -126,10 +126,7 @@ class Api {
   }
 
   Future<String> convertImageToBase64(CameraImage image) async {
-    // Convert the image data to a byte array
     final Uint8List bytes = concatenatePlanes(image.planes);
-
-    // Convert the byte array to a base64 string
     final String base64Image = base64Encode(bytes);
 
     return base64Image;
@@ -143,8 +140,9 @@ class Api {
     return allBytes.done().buffer.asUint8List();
   }
 
-/*   Future<List<Report>> getReports() async {
-    final response = await http.get(Uri.http(address, '/api/reports'));
+  Future<List<Report>> getReports() async {
+    final response =
+        await http.get(Uri.http(address, '/api/reports', {'images': 'false'}));
 
     if (response.statusCode == 200) {
       List<Report> reports = [];
@@ -157,5 +155,5 @@ class Api {
     } else {
       throw Exception('${response.statusCode} - Failed to load');
     }
-  } */
+  }
 }

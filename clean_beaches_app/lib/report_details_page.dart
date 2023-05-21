@@ -102,31 +102,32 @@ class _ReportDetailsPageState extends State<ReportDetailsPage> {
                             ),
                             Container(
                               decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8),
-                                  color: widget.report.cleaned
-                                      ? Colors.green.shade100
-                                      : Colors.red.shade100),
+                                borderRadius: BorderRadius.circular(8),
+                                color: widget.report.dateCleaned != null
+                                    ? Colors.green.shade100
+                                    : Colors.red.shade100,
+                              ),
                               padding: const EdgeInsets.all(4),
                               child: Row(
                                 children: [
                                   Icon(
-                                    widget.report.cleaned
+                                    widget.report.dateCleaned != null
                                         ? Icons.flare
                                         : Icons.cleaning_services_outlined,
                                     size: 18,
-                                    color: widget.report.cleaned
+                                    color: widget.report.dateCleaned != null
                                         ? Colors.green
                                         : Colors.red,
                                   ),
                                   const SizedBox(width: 8),
                                   Text(
-                                    widget.report.cleaned
+                                    widget.report.dateCleaned != null
                                         ? 'CLEANED'
                                         : 'NEEDS CLEANING',
                                     style: TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.w500,
-                                      color: widget.report.cleaned
+                                      color: widget.report.dateCleaned != null
                                           ? Colors.green
                                           : Colors.red,
                                     ),
@@ -148,7 +149,7 @@ class _ReportDetailsPageState extends State<ReportDetailsPage> {
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: !widget.report.cleaned
+      floatingActionButton: widget.report.dateCleaned == null
           ? FloatingActionButton.extended(
               onPressed: () {
                 showDialog(

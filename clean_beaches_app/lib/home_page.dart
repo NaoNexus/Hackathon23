@@ -1,5 +1,7 @@
+import 'dart:developer';
 import 'dart:io';
 
+import 'package:clean_beaches_app/api.dart';
 import 'package:clean_beaches_app/camera_screen.dart';
 import 'package:clean_beaches_app/relative_date.dart';
 import 'package:clean_beaches_app/report.dart';
@@ -22,12 +24,17 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final MapController _mapController = MapController();
 
+  late Api _api;
+
   List<Report> _visualizedReports = [];
+  late Future<List<Report>> _reports;
 
   LatLng _currentLocation = LatLng(45.345, -122.55);
 
   @override
   void initState() {
+    _api = Api(ip: '192.168.0.150', port: 5000);
+    _reports = _api.getReports();
     _visualizedReports = testData;
     getLocation();
     super.initState();
@@ -39,82 +46,123 @@ class _HomePageState extends State<HomePage> {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(8),
-          child: Column(
-            children: [
-              Flexible(
-                flex: 2,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: Stack(
+          child: FutureBuilder(
+            future: _reports,
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                log(snapshot.error.toString());
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      FlutterMap(
-                        mapController: _mapController,
-                        options: MapOptions(
-                          slideOnBoundaries: true,
-                          center: _currentLocation,
-                        ),
-                        children: [
-                          TileLayer(
-                            urlTemplate:
-                                'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                          ),
-                        ],
+                      Icon(
+                        Icons.error_outline,
+                        size: 96,
+                        color: Theme.of(context).colorScheme.error,
                       ),
-                      Positioned(
-                        top: 8,
-                        right: 8,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.8),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          padding: const EdgeInsets.all(8),
-                          child: InkWell(
-                            child: GestureDetector(
-                              onTap: () => centerMap(),
-                              child: const Icon(
-                                Icons.my_location_outlined,
-                                color: Colors.blue,
-                              ),
-                            ),
-                          ),
+                      const SizedBox(height: 16),
+                      Text(
+                        'ERROR',
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.error,
+                          fontSize: 32,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      Text(
+                        snapshot.error?.toString() ?? '',
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.onErrorContainer,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
                     ],
                   ),
-                ),
-              ),
-              const SizedBox(height: 8),
-              Flexible(
-                flex: 3,
-                child: ListView.separated(
-                  itemBuilder: (_, index) => BeachReportCard(
-                    report: _visualizedReports[index],
-                  ),
-                  separatorBuilder: (_, __) => const SizedBox(height: 8),
-                  itemCount: _visualizedReports.length,
-                ),
-              ),
-              FloatingActionButton.extended(
-                onPressed: () {
-                  final Directory directory =
-                      Directory('/path/to/existing/folder');
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          CameraScreen(outputPath: directory.path),
+                );
+              }
+              if (snapshot.hasData) {
+                _visualizedReports = snapshot.data ?? [];
+                return Column(
+                  children: [
+                    Flexible(
+                      flex: 2,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: Stack(
+                          children: [
+                            FlutterMap(
+                              mapController: _mapController,
+                              options: MapOptions(
+                                slideOnBoundaries: true,
+                                center: _currentLocation,
+                              ),
+                              children: [
+                                TileLayer(
+                                  urlTemplate:
+                                      'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                                ),
+                              ],
+                            ),
+                            Positioned(
+                              top: 8,
+                              right: 8,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withOpacity(0.8),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                padding: const EdgeInsets.all(8),
+                                child: InkWell(
+                                  child: GestureDetector(
+                                    onTap: () => centerMap(),
+                                    child: const Icon(
+                                      Icons.my_location_outlined,
+                                      color: Colors.blue,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
-                  );
-                },
-                backgroundColor: Colors.deepPurple,
-                label: const Text('REPORT DIRTY BEACH'),
-                icon: const Icon(Icons.cleaning_services),
-              ),
-              const SizedBox(height: 20),
-            ],
+                    const SizedBox(height: 8),
+                    Flexible(
+                      flex: 3,
+                      child: ListView.separated(
+                        itemBuilder: (_, index) => BeachReportCard(
+                          report: _visualizedReports[index],
+                        ),
+                        separatorBuilder: (_, __) => const SizedBox(height: 8),
+                        itemCount: _visualizedReports.length,
+                      ),
+                    ),
+                  ],
+                );
+              }
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            },
           ),
         ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          final Directory directory = Directory('/path/to/existing/folder');
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => CameraScreen(outputPath: directory.path),
+            ),
+          );
+        },
+        label: const Text('REPORT DIRTY BEACH'),
+        icon: const Icon(Icons.cleaning_services),
       ),
     );
   }
@@ -195,26 +243,26 @@ class BeachReportCard extends StatelessWidget {
                   Container(
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(8),
-                        color: report.cleaned
+                        color: report.dateCleaned != null
                             ? Colors.green.shade100
                             : Colors.red.shade100),
                     padding: const EdgeInsets.all(4),
                     child: Row(
                       children: [
                         Icon(
-                          report.cleaned
+                          report.dateCleaned != null
                               ? Icons.flare
                               : Icons.cleaning_services_outlined,
                           size: 18,
-                          color: report.cleaned ? Colors.green : Colors.red,
+                          color: report.dateCleaned != null ? Colors.green : Colors.red,
                         ),
                         const SizedBox(width: 8),
                         Text(
-                          report.cleaned ? 'CLEANED' : 'NEEDS CLEANING',
+                          report.dateCleaned != null ? 'CLEANED' : 'NEEDS CLEANING',
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
-                            color: report.cleaned ? Colors.green : Colors.red,
+                            color: report.dateCleaned != null ? Colors.green : Colors.red,
                           ),
                         ),
                       ],
@@ -226,7 +274,7 @@ class BeachReportCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Text(
-                    report.date.relativeDateString,
+                    report.dateReported.relativeDateString,
                     style: const TextStyle(
                       fontSize: 14,
                       color: Colors.grey,
