@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'dart:developer';
+
 import 'package:camera/camera.dart';
 import 'package:clean_beaches_app/report.dart';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:latlong2/latlong.dart';
 
@@ -15,23 +15,6 @@ class Api {
   Api({required this.ip, this.port});
 
   String get address => '$ip${port != null ? ':$port' : ''}';
-
-  Future<List<Report>> getReports() async {
-    
-    final response = await http.get(Uri.http(address, '/api/reports'));
-
-    if (response.statusCode == 200) {
-      List<Report> reports = [];
-
-      for (Map<String, dynamic> report in jsonDecode(response.body)['data']) {
-        reports.add(Report.fromJson(report));
-      }
-
-      return reports;
-    } else {
-      throw Exception('${response.statusCode} - Failed to load');
-    }
-  }
 
   void beachCleanedDetails({
     required String id,

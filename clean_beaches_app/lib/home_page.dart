@@ -31,16 +31,12 @@ class _HomePageState extends State<HomePage> {
 
   LatLng _currentLocation = LatLng(45.345, -122.55);
 
-  final String ip = '192.168.0.150';
-  final int port = 5000;
-
   @override
   void initState() {
     _api = Api(ip: '192.168.0.150', port: 5000);
     _reports = _api.getReports();
     _visualizedReports = testData;
     getLocation();
-    Api api = Api(ip: ip, port: port);
     super.initState();
   }
 
@@ -199,9 +195,7 @@ class BeachReportCard extends StatelessWidget {
     required this.report,
   }) : super(key: key);
 
-  final Future<List<Report>> report;
-  final String ip = '192.168.0.150';
-  final int port = 5000;
+  final Report report;
 
   @override
   Widget build(BuildContext context) {
@@ -209,7 +203,7 @@ class BeachReportCard extends StatelessWidget {
       onTap: () => Navigator.of(context).push(
         MaterialPageRoute(
           builder: (_) => ReportDetailsPage(
-            report: report as Report,
+            report: report,
           ),
         ),
       ),
