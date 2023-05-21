@@ -188,7 +188,7 @@ def report(id):
 @app.route('/api/reports', methods=['GET'])
 def reports():
     try:
-        includeImages = request.args.get('images', '') == 'false'
+        includeImages = request.args.get('images', '') != 'false'
         return jsonify({'code': 200, 'message': 'OK', 'data': db_helper.get_beaches_reports(includeImages)}), 200
     except Exception as e:
         logger.error(str(e))

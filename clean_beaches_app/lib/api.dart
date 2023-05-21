@@ -143,10 +143,7 @@ class Api {
   }
 
   Future<String> convertImageToBase64(CameraImage image) async {
-    // Convert the image data to a byte array
     final Uint8List bytes = concatenatePlanes(image.planes);
-
-    // Convert the byte array to a base64 string
     final String base64Image = base64Encode(bytes);
 
     return base64Image;
@@ -160,8 +157,20 @@ class Api {
     return allBytes.done().buffer.asUint8List();
   }
 
-  Image base64ToImage(String base64String) {
-    Uint8List bytes = base64Decode(base64String);
-    return Image.memory(bytes);
+  Future<List<Report>> getReports() async {
+    final response =
+        await http.get(Uri.http(address, '/api/reports', {'images': 'false'}));
+
+    if (response.statusCode == 200) {
+      List<Report> reports = [];
+
+      for (Map<String, dynamic> report in jsonDecode(response.body)['data']) {
+        reports.add(Report.fromJson(report));
+      }
+
+      return reports;
+    } else {
+      throw Exception('${response.statusCode} - Failed to load');
+    }
   }
 }
