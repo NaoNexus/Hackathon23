@@ -31,5 +31,5 @@ class Report {
         details: json['details'],
         dirtyImageExtension: json['dirtyImageExtension'],
         cleanImageExtension: json['cleanImageExtension'],
-      );
+      ); 
 }
