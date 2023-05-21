@@ -22,10 +22,14 @@ class Report {
 
   factory Report.fromJson(Map<String, dynamic> json) => Report(
         id: json['id'],
-        position: position,
-        cleaned: cleaned,
-        date: date,
-        details: details,
-        imagePath: imagePath,
-      ); */
+        position: LatLng(double.tryParse(json['latitude']) ?? 0,
+            double.tryParse(json['longitude']) ?? 0),
+        dateCleaned: DateTime.tryParse(json['dateCleaned']),
+        dateReported: DateTime.parse(json['dateReported']),
+        userCleaned: json['userCleaned'] ?? '',
+        userReported: json['userReported'],
+        details: json['details'],
+        dirtyImageExtension: json['dirtyImageExtension'],
+        cleanImageExtension: json['cleanImageExtension'],
+      ); 
 }
