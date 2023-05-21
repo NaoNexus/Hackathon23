@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:clean_beaches_app/camera_screen.dart';
 import 'package:clean_beaches_app/relative_date.dart';
 import 'package:clean_beaches_app/report.dart';
 import 'package:clean_beaches_app/report_details_page.dart';
@@ -48,6 +51,7 @@ class _HomePageState extends State<HomePage> {
                         mapController: _mapController,
                         options: MapOptions(
                           slideOnBoundaries: true,
+                          center: _currentLocation,
                         ),
                         children: [
                           TileLayer(
@@ -90,7 +94,24 @@ class _HomePageState extends State<HomePage> {
                   separatorBuilder: (_, __) => const SizedBox(height: 8),
                   itemCount: _visualizedReports.length,
                 ),
-              )
+              ),
+              FloatingActionButton.extended(
+                onPressed: () {
+                  final Directory directory =
+                      Directory('/path/to/existing/folder');
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          CameraScreen(outputPath: directory.path),
+                    ),
+                  );
+                },
+                backgroundColor: Colors.deepPurple,
+                label: const Text('REPORT DIRTY BEACH'),
+                icon: const Icon(Icons.cleaning_services),
+              ),
+              const SizedBox(height: 20),
             ],
           ),
         ),
@@ -112,7 +133,9 @@ class _HomePageState extends State<HomePage> {
       permission = await Geolocator.requestPermission();
     }
 
-    Position locationData = await Geolocator.getCurrentPosition();
+    Position locationData = await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high,
+    );
 
     _currentLocation = LatLng(locationData.latitude, locationData.longitude);
   }

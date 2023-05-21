@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:camera/camera.dart';
+import 'package:clean_beaches_app/api.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -16,6 +17,8 @@ class CameraScreen extends StatefulWidget {
 class _CameraScreenState extends State<CameraScreen> {
   late CameraController _controller;
   late Future<void> _initializeControllerFuture;
+  final String ip = '192.168.0.150';
+  final int port = 5000;
 
   @override
   void initState() {
@@ -70,17 +73,45 @@ class _CameraScreenState extends State<CameraScreen> {
     } catch (e) {
       print('Failed to capture picture: $e');
     }
+
+    //show dialog with image preview and send button
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Image Preview'),
+          content: Image.file(File(filePath)),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                //TODO: send image to server
+
+                Navigator.of(context).pop();
+                Navigator.of(context).pop(filePath);
+              },
+              child: const Text('Send'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Camera Screen'),
+        title: const Text('Camera Screen'),
       ),
       body: Column(
         children: [
-          Container(
+          SizedBox(
             height: 600,
             width: double.infinity,
             child: FutureBuilder<void>(
@@ -89,15 +120,15 @@ class _CameraScreenState extends State<CameraScreen> {
                 if (snapshot.connectionState == ConnectionState.done) {
                   return CameraPreview(_controller);
                 } else {
-                  return Center(child: CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator());
                 }
               },
             ),
           ),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           FloatingActionButton(
-            child: Icon(Icons.camera),
             onPressed: _captureAndSaveImage,
+            child: const Icon(Icons.camera),
           ),
         ],
       ),
