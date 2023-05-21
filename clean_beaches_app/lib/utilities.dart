@@ -10,4 +10,20 @@ final testData = [
     details: 'Spiaggia della morte',
     imagePath: '',
   ),
+  Report(
+    id: '11dd',
+    position: LatLng(89.435651, 10.993239),
+    cleaned: true,
+    date: DateTime(2023, 11, 10),
+    details: 'Spiaggia della morte 2',
+    imagePath: '',
+  ),
+  Report(
+    id: '10dd',
+    position: LatLng(40.435651, 50.993239),
+    cleaned: false,
+    date: DateTime(2023, 10, 10),
+    details: 'Spiaggia della morte 3',
+    imagePath: '',
+  ),
 ];

@@ -1,5 +1,6 @@
 import 'package:clean_beaches_app/relative_date.dart';
 import 'package:clean_beaches_app/report.dart';
+import 'package:clean_beaches_app/report_details_page.dart';
 import 'package:clean_beaches_app/utilities.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -128,82 +129,92 @@ class BeachReportCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.grey.shade100,
-        borderRadius: BorderRadius.circular(16),
+    return GestureDetector(
+      onTap: () => Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (_) => ReportDetailsPage(
+            report: report,
+          ),
+        ),
+      
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(8),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      report.id,
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Text(
-                      report.details,
-                      style: const TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey,
-                      ),
-                    ),
-                  ],
-                ),
-                Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      color: report.cleaned
-                          ? Colors.green.shade100
-                          : Colors.red.shade100),
-                  padding: const EdgeInsets.all(4),
-                  child: Row(
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.grey.shade100,
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(8),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Icon(
-                        report.cleaned
-                            ? Icons.flare
-                            : Icons.cleaning_services_outlined,
-                        size: 18,
-                        color: report.cleaned ? Colors.green : Colors.red,
-                      ),
-                      const SizedBox(width: 8),
                       Text(
-                        report.cleaned ? 'CLEANED' : 'NEEDS CLEANING',
-                        style: TextStyle(
+                        report.id,
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        report.details,
+                        style: const TextStyle(
                           fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                          color: report.cleaned ? Colors.green : Colors.red,
+                          color: Colors.grey,
                         ),
                       ),
                     ],
                   ),
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Text(
-                  report.date.relativeDateString,
-                  style: const TextStyle(
-                    fontSize: 14,
-                    color: Colors.grey,
+                  Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        color: report.cleaned
+                            ? Colors.green.shade100
+                            : Colors.red.shade100),
+                    padding: const EdgeInsets.all(4),
+                    child: Row(
+                      children: [
+                        Icon(
+                          report.cleaned
+                              ? Icons.flare
+                              : Icons.cleaning_services_outlined,
+                          size: 18,
+                          color: report.cleaned ? Colors.green : Colors.red,
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          report.cleaned ? 'CLEANED' : 'NEEDS CLEANING',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            color: report.cleaned ? Colors.green : Colors.red,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            ),
-          ],
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Text(
+                    report.date.relativeDateString,
+                    style: const TextStyle(
+                      fontSize: 14,
+                      color: Colors.grey,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
