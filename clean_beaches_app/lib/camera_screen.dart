@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:camera/camera.dart';
-import 'package:clean_beaches_app/api.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 
