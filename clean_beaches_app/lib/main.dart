@@ -46,43 +46,45 @@ class Home extends StatelessWidget {
     return FutureBuilder(
       future: login(),
       builder: (context, snapshot) {
-        if (snapshot.hasError) {
+        if (snapshot.hasError && !snapshot.error.toString().contains('wrong')) {
           return Scaffold(
-            body: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.error_outline,
-                  size: 48,
-                  color: Theme.of(context).colorScheme.error,
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  'ERROR',
-                  style: TextStyle(
+            body: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.error_outline,
+                    size: 96,
                     color: Theme.of(context).colorScheme.error,
-                    fontSize: 32,
-                    fontWeight: FontWeight.w600,
                   ),
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  snapshot.error?.toString() ?? '',
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.error,
-                    fontSize: 28,
-                    fontWeight: FontWeight.w500,
+                  const SizedBox(height: 16),
+                  Text(
+                    'ERROR',
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.error,
+                      fontSize: 32,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
-                ),
-              ],
+                  Text(
+                    snapshot.error?.toString() ?? '',
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onErrorContainer,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+              ),
             ),
           );
         }
-        if (snapshot.hasData) {
-          if (snapshot.data == 'OK') {
+        if (snapshot.hasData || snapshot.error.toString().contains('wrong')) {
+          if ((snapshot.data ?? '') == 'OK') {
             return const HomePage();
           } else {
-            return const LoginPage();
+            return const LoginPage(firstPage: true);
           }
         }
         return const Scaffold(

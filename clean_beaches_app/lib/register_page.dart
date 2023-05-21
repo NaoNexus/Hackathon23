@@ -44,9 +44,10 @@ class _RegisterPageState extends State<RegisterPage> {
         body: Container(
           decoration: const BoxDecoration(
             image: DecorationImage(
-              image: AssetImage('assets/logo_green.png'),
+              image: AssetImage('assets/clean_beach.png'),
               fit: BoxFit.contain,
-              opacity: 0.1,
+              opacity: 0.2,
+              alignment: Alignment.bottomCenter,
             ),
           ),
           padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -164,7 +165,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       },
                     ),
                     const SizedBox(height: 32),
-                    InkWell(
+                    GestureDetector(
                       onTap: () async {
                         if (_formKey.currentState!.validate()) {
                           try {
@@ -218,12 +219,12 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                     ),
                     const SizedBox(height: 20),
-                    TextButton(
-                      onPressed: () {
+                    GestureDetector(
+                      onTap: () {
                         Navigator.popAndPushNamed(context, '/login');
                       },
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(),
+                        padding: const EdgeInsets.all(8),
                         child: RichText(
                           text: TextSpan(
                             text: 'Already have an account? ',

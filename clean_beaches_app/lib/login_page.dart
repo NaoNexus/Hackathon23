@@ -5,7 +5,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'api.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+  const LoginPage({
+    super.key,
+    this.firstPage = false,
+  });
+
+  final bool firstPage;
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -42,9 +47,10 @@ class _LoginPageState extends State<LoginPage> {
         body: Container(
           decoration: const BoxDecoration(
             image: DecorationImage(
-              image: AssetImage('assets/logo_green.png'),
+              image: AssetImage('assets/clean_beach.png'),
               fit: BoxFit.contain,
-              opacity: 0.1,
+              opacity: 0.2,
+              alignment: Alignment.bottomCenter,
             ),
           ),
           padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -125,7 +131,10 @@ class _LoginPageState extends State<LoginPage> {
                                         'password', _passwordController.text);
                                   });
 
-                                  Navigator.popAndPushNamed(context, '/home');
+                                  widget.firstPage
+                                      ? Navigator.pushNamed(context, '/home')
+                                      : Navigator.popAndPushNamed(
+                                          context, '/home');
                                 }
                               } catch (e) {
                                 showSnackBar(
@@ -163,26 +172,31 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                     const SizedBox(height: 20),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.popAndPushNamed(context, '/register');
+                    GestureDetector(
+                      onTap: () {
+                        widget.firstPage
+                            ? Navigator.pushNamed(context, '/register')
+                            : Navigator.popAndPushNamed(context, '/register');
                       },
-                      child: RichText(
-                        text: const TextSpan(
-                          text: "Don't have an account? ",
-                          style: TextStyle(
-                            color: Colors.grey,
-                            fontSize: 14,
-                          ),
-                          children: <TextSpan>[
-                            TextSpan(
-                              text: 'Register',
-                              style: TextStyle(
-                                color: Colors.blue,
-                                fontSize: 14,
-                              ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: RichText(
+                          text: const TextSpan(
+                            text: "Don't have an account? ",
+                            style: TextStyle(
+                              color: Colors.grey,
+                              fontSize: 14,
                             ),
-                          ],
+                            children: <TextSpan>[
+                              TextSpan(
+                                text: 'Register',
+                                style: TextStyle(
+                                  color: Colors.blue,
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
