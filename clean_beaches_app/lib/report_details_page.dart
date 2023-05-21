@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:clean_beaches_app/report.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
 
 import 'camera_screen.dart';
 
@@ -14,19 +15,10 @@ class ReportDetailsPage extends StatefulWidget {
 }
 
 class _ReportDetailsPageState extends State<ReportDetailsPage> {
-/*   late CameraController _controller;
-  late List<CameraDescription> _cameras; */
   @override
   void initState() {
     super.initState();
-    //initializeCamera();
   }
-
-/*   Future<void> initializeCamera() async {
-    _cameras = await availableCameras();
-    _controller = CameraController(_cameras[0], ResolutionPreset.medium);
-    await _controller.initialize();
-  } */
 
   @override
   Widget build(BuildContext context) {
@@ -34,65 +26,176 @@ class _ReportDetailsPageState extends State<ReportDetailsPage> {
       appBar: AppBar(
         title: const Text('Report Details'),
       ),
-      body: Center(
-        child: Column(
-          children: [
-            Text(widget.report.id),
-            Text(widget.report.position.toString()),
-            Text(widget.report.cleaned.toString()),
-            Text(widget.report.date.toString()),
-            Text(widget.report.details),
-            //Image.asset(widget.report.imagePath),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          showDialog(
-            context: context,
-            barrierDismissible: true,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: const Text('Are you sure?'),
-                content: const SingleChildScrollView(
-                  child: ListBody(
-                    children: <Widget>[
-                      Text('Is the beach fully cleaned?'),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(8),
+          child: Column(
+            children: [
+              Flexible(
+                flex: 1,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: FlutterMap(
+                    options: MapOptions(
+                      minZoom: 11.0,
+                      maxZoom: 17.0,
+                      center: widget.report.position,
+                      interactiveFlags: InteractiveFlag.none,
+                    ),
+                    children: [
+                      TileLayer(
+                        urlTemplate:
+                            'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                      ),
+                      MarkerLayer(
+                        markers: [
+                          Marker(
+                            point: widget.report.position,
+                            width: 50,
+                            height: 50,
+                            builder: (_) => Icon(
+                              Icons.beach_access,
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
+                          ),
+                        ],
+                      ),
                     ],
                   ),
                 ),
-                actions: <Widget>[
-                  TextButton(
-                    child: const Text('Yes'),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                      Navigator.of(context).pop();
-                    },
+              ),
+              const SizedBox(height: 16),
+              Flexible(
+                flex: 4,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade100,
+                    borderRadius: BorderRadius.circular(16),
                   ),
-                  TextButton(
-                    child: const Text('No'),
-                    onPressed: () {
-                      final Directory directory =
-                          Directory('/path/to/existing/folder');
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              CameraScreen(outputPath: directory.path),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  widget.report.id,
+                                  style: const TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Text(
+                                  widget.report.details,
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Container(
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8),
+                                  color: widget.report.cleaned
+                                      ? Colors.green.shade100
+                                      : Colors.red.shade100),
+                              padding: const EdgeInsets.all(4),
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    widget.report.cleaned
+                                        ? Icons.flare
+                                        : Icons.cleaning_services_outlined,
+                                    size: 18,
+                                    color: widget.report.cleaned
+                                        ? Colors.green
+                                        : Colors.red,
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Text(
+                                    widget.report.cleaned
+                                        ? 'CLEANED'
+                                        : 'NEEDS CLEANING',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                      color: widget.report.cleaned
+                                          ? Colors.green
+                                          : Colors.red,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
-                      );
-                      //Navigator.of(context).pop();
-                    },
+                        Image.network(
+                            'http://192.168.0.150/images/${widget.report.id}/dirty.${widget.report.dirtyImageExtension}')
+                      ],
+                    ),
                   ),
-                ],
-              );
-            },
-          );
-        },
-        backgroundColor: Colors.deepPurple,
-        label: const Text('CLEAN BEACH'),
-        icon: const Icon(Icons.cleaning_services),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: !widget.report.cleaned
+          ? FloatingActionButton.extended(
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  barrierDismissible: true,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: const Text('Are you sure?'),
+                      content: const SingleChildScrollView(
+                        child: ListBody(
+                          children: <Widget>[
+                            Text('Is the beach fully cleaned?'),
+                          ],
+                        ),
+                      ),
+                      actions: <Widget>[
+                        TextButton(
+                          child: const Text('Yes'),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                        TextButton(
+                          child: const Text('No'),
+                          onPressed: () {
+                            final Directory directory =
+                                Directory('/path/to/existing/folder');
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    CameraScreen(outputPath: directory.path),
+                              ),
+                            );
+                            //Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
+              label: const Text('CLEAN BEACH'),
+              icon: const Icon(Icons.cleaning_services),
+            )
+          : const SizedBox(),
     );
   }
 }

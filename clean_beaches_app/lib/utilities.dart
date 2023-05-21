@@ -9,7 +9,8 @@ final testData = [
     cleaned: false,
     date: DateTime(2023, 12, 10),
     details: 'Spiaggia della morte',
-    imagePath: '',
+    dirtyImageExtension: 'png',
+    cleanImageExtension: 'png',
   ),
   Report(
     id: '11dd',
@@ -17,7 +18,8 @@ final testData = [
     cleaned: true,
     date: DateTime(2023, 11, 10),
     details: 'Spiaggia della morte 2',
-    imagePath: '',
+    dirtyImageExtension: 'png',
+    cleanImageExtension: 'png',
   ),
   Report(
     id: '10dd',
@@ -25,7 +27,8 @@ final testData = [
     cleaned: false,
     date: DateTime(2023, 10, 10),
     details: 'Spiaggia della morte 3',
-    imagePath: '',
+    dirtyImageExtension: 'png',
+    cleanImageExtension: 'png',
   ),
 ];
 

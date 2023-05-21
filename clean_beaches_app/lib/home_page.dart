@@ -4,8 +4,8 @@ import 'package:clean_beaches_app/report_details_page.dart';
 import 'package:clean_beaches_app/utilities.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:location/location.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({
@@ -104,32 +104,17 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> getLocation() async {
-    Location location = Location();
+    LocationPermission permission;
 
-    bool serviceEnabled;
-    PermissionStatus permissionGranted;
-    LocationData locationData;
+    permission = await Geolocator.checkPermission();
 
-    serviceEnabled = await location.serviceEnabled();
-    if (!serviceEnabled) {
-      serviceEnabled = await location.requestService();
-      if (!serviceEnabled) {
-        return;
-      }
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
     }
 
-    permissionGranted = await location.hasPermission();
-    if (permissionGranted == PermissionStatus.denied) {
-      permissionGranted = await location.requestPermission();
-      if (permissionGranted != PermissionStatus.granted) {
-        return;
-      }
-    }
+    Position locationData = await Geolocator.getCurrentPosition();
 
-    locationData = await location.getLocation();
-
-    _currentLocation =
-        LatLng(locationData.latitude ?? 0, locationData.longitude ?? 0);
+    _currentLocation = LatLng(locationData.latitude, locationData.longitude);
   }
 }
 

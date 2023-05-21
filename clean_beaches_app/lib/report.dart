@@ -4,7 +4,7 @@ class Report {
   final String id;
   final LatLng position;
   final String details;
-  final String imagePath;
+  final String dirtyImageExtension, cleanImageExtension;
   final DateTime date;
   final bool cleaned;
 
@@ -14,7 +14,8 @@ class Report {
     required this.cleaned,
     required this.date,
     required this.details,
-    required this.imagePath,
+    required this.dirtyImageExtension,
+    required this.cleanImageExtension,
   });
 /* 
   factory Report.fromJson(Map<String, dynamic> json) => Report(
