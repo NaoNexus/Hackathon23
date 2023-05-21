@@ -1,7 +1,10 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:typed_data';
 
+import 'package:camera/camera.dart';
 import 'package:crypto/crypto.dart';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:latlong2/latlong.dart';
 
@@ -15,7 +18,7 @@ class Api {
 
   void beachCleanedDetails({
     required String id,
-    required String photoBase64,
+    required CameraImage image,
     required DateTime dateCleaned,
     required LatLng latitude,
     required LatLng longitude,
@@ -24,7 +27,7 @@ class Api {
       http.MultipartRequest request =
           http.MultipartRequest('POST', Uri.http(address, '/api/clean_beach'))
             ..fields['id'] = id
-            ..fields['photo'] = photoBase64
+            ..fields['photo'] = convertImageToBase64(image).toString()
             ..fields['dateCleaned'] = dateCleaned.toString()
             ..fields['latitude'] = latitude.toString()
             ..fields['longitude'] = longitude.toString();
@@ -37,7 +40,7 @@ class Api {
 
   void dirtyBeachDetails({
     required String id,
-    required String photoBase64,
+    required CameraImage image,
     required DateTime dateReported,
     required LatLng latitude,
     required LatLng longitude,
@@ -47,7 +50,7 @@ class Api {
       http.MultipartRequest request =
           http.MultipartRequest('POST', Uri.http(address, '/api/report_beach'))
             ..fields['id'] = id
-            ..fields['photo'] = photoBase64
+            ..fields['photo'] = convertImageToBase64(image).toString()
             ..fields['dateReported'] = dateReported.toString()
             ..fields['latitude'] = latitude.toString()
             ..fields['longitude'] = longitude.toString()
@@ -120,6 +123,24 @@ class Api {
     var digest = sha256.convert(bytes);
     var encryptedString = digest.toString();
     return encryptedString;
+  }
+
+  Future<String> convertImageToBase64(CameraImage image) async {
+    // Convert the image data to a byte array
+    final Uint8List bytes = concatenatePlanes(image.planes);
+
+    // Convert the byte array to a base64 string
+    final String base64Image = base64Encode(bytes);
+
+    return base64Image;
+  }
+
+  Uint8List concatenatePlanes(List<Plane> planes) {
+    final WriteBuffer allBytes = WriteBuffer();
+    for (Plane plane in planes) {
+      allBytes.putUint8List(plane.bytes);
+    }
+    return allBytes.done().buffer.asUint8List();
   }
 
 /*   Future<List<Report>> getReports() async {

@@ -1,11 +1,14 @@
+import 'dart:io';
+
+import 'package:clean_beaches_app/camera_screen.dart';
 import 'package:clean_beaches_app/relative_date.dart';
 import 'package:clean_beaches_app/report.dart';
 import 'package:clean_beaches_app/report_details_page.dart';
 import 'package:clean_beaches_app/utilities.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:location/location.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({
@@ -48,6 +51,7 @@ class _HomePageState extends State<HomePage> {
                         mapController: _mapController,
                         options: MapOptions(
                           slideOnBoundaries: true,
+                          center: _currentLocation,
                         ),
                         children: [
                           TileLayer(
@@ -90,7 +94,24 @@ class _HomePageState extends State<HomePage> {
                   separatorBuilder: (_, __) => const SizedBox(height: 8),
                   itemCount: _visualizedReports.length,
                 ),
-              )
+              ),
+              FloatingActionButton.extended(
+                onPressed: () {
+                  final Directory directory =
+                      Directory('/path/to/existing/folder');
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          CameraScreen(outputPath: directory.path),
+                    ),
+                  );
+                },
+                backgroundColor: Colors.deepPurple,
+                label: const Text('REPORT DIRTY BEACH'),
+                icon: const Icon(Icons.cleaning_services),
+              ),
+              const SizedBox(height: 20),
             ],
           ),
         ),
@@ -104,32 +125,14 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> getLocation() async {
-    Location location = Location();
+    await Geolocator.requestPermission();
 
-    bool serviceEnabled;
-    PermissionStatus permissionGranted;
-    LocationData locationData;
-
-    serviceEnabled = await location.serviceEnabled();
-    if (!serviceEnabled) {
-      serviceEnabled = await location.requestService();
-      if (!serviceEnabled) {
-        return;
-      }
-    }
-
-    permissionGranted = await location.hasPermission();
-    if (permissionGranted == PermissionStatus.denied) {
-      permissionGranted = await location.requestPermission();
-      if (permissionGranted != PermissionStatus.granted) {
-        return;
-      }
-    }
-
-    locationData = await location.getLocation();
-
-    _currentLocation =
-        LatLng(locationData.latitude ?? 0, locationData.longitude ?? 0);
+    Position position = await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high,
+    );
+    setState(() {
+      _currentLocation = LatLng(position.latitude, position.longitude);
+    });
   }
 }
 
