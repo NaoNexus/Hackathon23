@@ -29,45 +29,44 @@ class _ReportDetailsPageState extends State<ReportDetailsPage> {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(8),
-          child: Column(
-            children: [
-              Flexible(
-                flex: 1,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: FlutterMap(
-                    options: MapOptions(
-                      minZoom: 11.0,
-                      maxZoom: 17.0,
-                      center: widget.report.position,
-                      interactiveFlags: InteractiveFlag.none,
-                    ),
-                    children: [
-                      TileLayer(
-                        urlTemplate:
-                            'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 100,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: FlutterMap(
+                      options: MapOptions(
+                        minZoom: 11.0,
+                        maxZoom: 17.0,
+                        center: widget.report.position,
+                        interactiveFlags: InteractiveFlag.none,
                       ),
-                      MarkerLayer(
-                        markers: [
-                          Marker(
-                            point: widget.report.position,
-                            width: 50,
-                            height: 50,
-                            builder: (_) => Icon(
-                              Icons.beach_access,
-                              color: Theme.of(context).colorScheme.primary,
+                      children: [
+                        TileLayer(
+                          urlTemplate:
+                              'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                        ),
+                        MarkerLayer(
+                          markers: [
+                            Marker(
+                              point: widget.report.position,
+                              width: 50,
+                              height: 50,
+                              builder: (_) => Icon(
+                                Icons.beach_access,
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                    ],
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(height: 16),
-              Flexible(
-                flex: 4,
-                child: Container(
+                const SizedBox(height: 16),
+                Container(
                   decoration: BoxDecoration(
                     color: Colors.grey.shade100,
                     borderRadius: BorderRadius.circular(16),
@@ -84,9 +83,9 @@ class _ReportDetailsPageState extends State<ReportDetailsPage> {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  widget.report.id,
-                                  style: const TextStyle(
+                                const Text(
+                                  'Beach',
+                                  style: TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -100,51 +99,183 @@ class _ReportDetailsPageState extends State<ReportDetailsPage> {
                                 ),
                               ],
                             ),
-                            Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8),
-                                color: widget.report.dateCleaned != null
-                                    ? Colors.green.shade100
-                                    : Colors.red.shade100,
-                              ),
-                              padding: const EdgeInsets.all(4),
-                              child: Row(
-                                children: [
-                                  Icon(
-                                    widget.report.dateCleaned != null
-                                        ? Icons.flare
-                                        : Icons.cleaning_services_outlined,
-                                    size: 18,
+                            Column(
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8),
                                     color: widget.report.dateCleaned != null
-                                        ? Colors.green
-                                        : Colors.red,
+                                        ? Colors.green.shade100
+                                        : Colors.red.shade100,
                                   ),
-                                  const SizedBox(width: 8),
-                                  Text(
-                                    widget.report.dateCleaned != null
-                                        ? 'CLEANED'
-                                        : 'NEEDS CLEANING',
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500,
-                                      color: widget.report.dateCleaned != null
-                                          ? Colors.green
-                                          : Colors.red,
+                                  padding: const EdgeInsets.all(4),
+                                  child: Row(
+                                    children: [
+                                      Icon(
+                                        widget.report.dateCleaned != null
+                                            ? Icons.flare
+                                            : Icons.cleaning_services_outlined,
+                                        size: 18,
+                                        color: widget.report.dateCleaned != null
+                                            ? Colors.green
+                                            : Colors.red,
+                                      ),
+                                      const SizedBox(width: 8),
+                                      Text(
+                                        widget.report.dateCleaned != null
+                                            ? 'CLEANED'
+                                            : 'NEEDS CLEANING',
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w500,
+                                          color:
+                                              widget.report.dateCleaned != null
+                                                  ? Colors.green
+                                                  : Colors.red,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                Row(
+                                  children: [
+                                    Icon(
+                                      Icons.location_on_outlined,
+                                      size: 16,
+                                      color: Colors.grey.shade500,
                                     ),
+                                    Text(
+                                      '${widget.report.position.latitude}N ${widget.report.position.longitude}E',
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.grey.shade50,
+                            ),
+                            child: Column(
+                              children: [
+                                Image.network(
+                                  'http://192.168.0.150:5000/images/${widget.report.id}/dirty.${widget.report.dirtyImageExtension}',
+                                ),
+                                const Text(
+                                  'DIRTY IMAGE',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    letterSpacing: 1.25,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                Row(
+                                  children: [
+                                    Icon(
+                                      Icons.account_circle_outlined,
+                                      size: 16,
+                                      color: Colors.grey.shade500,
+                                    ),
+                                    Text(
+                                      widget.report.userReported,
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                    const Spacer(),
+                                    Icon(
+                                      Icons.calendar_today,
+                                      size: 16,
+                                      color: Colors.grey.shade500,
+                                    ),
+                                    Text(
+                                      widget.report.dateReported
+                                          .toString()
+                                          .split('.')[0],
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        if (widget.report.dateCleaned != null)
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.grey.shade50,
+                              ),
+                              child: Column(
+                                children: [
+                                  Image.network(
+                                    'http://192.168.0.150:5000/images/${widget.report.id}/clean.${widget.report.dirtyImageExtension}',
+                                  ),
+                                  const Text(
+                                    'CLEAN IMAGE',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      letterSpacing: 1.25,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Row(
+                                    children: [
+                                      Icon(
+                                        Icons.account_circle_outlined,
+                                        size: 16,
+                                        color: Colors.grey.shade500,
+                                      ),
+                                      Text(
+                                        widget.report.userCleaned,
+                                        style: const TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                      const Spacer(),
+                                      Icon(
+                                        Icons.calendar_today,
+                                        size: 16,
+                                        color: Colors.grey.shade500,
+                                      ),
+                                      Text(
+                                        widget.report.dateCleaned
+                                            .toString()
+                                            .split('.')[0],
+                                        style: const TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ],
                               ),
                             ),
-                          ],
-                        ),
-                        Image.network(
-                            'http://192.168.0.150/images/${widget.report.id}/dirty.${widget.report.dirtyImageExtension}')
+                          )
                       ],
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

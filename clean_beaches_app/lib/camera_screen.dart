@@ -66,40 +66,11 @@ class _CameraScreenState extends State<CameraScreen> {
     try {
       final image = await _controller.takePicture();
 
-      File file = File(image.path);
-      await file.copy(filePath);
+      image.saveTo(filePath);
       print(filePath);
     } catch (e) {
       print('Failed to capture picture: $e');
     }
-
-    //show dialog with image preview and send button
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Image Preview'),
-          content: Image.file(File(filePath)),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () {
-                //TODO: send image to server
-
-                Navigator.of(context).pop();
-                Navigator.of(context).pop(filePath);
-              },
-              child: const Text('Send'),
-            ),
-          ],
-        );
-      },
-    );
   }
 
   @override
