@@ -85,15 +85,71 @@
         <h1 class="text text-white text-4xl">NaoNexus Team</h1>
     </div>
 
-    <div class="grid mx-6 my-6 gap-6" style="grid-template-columns: 5fr 1fr;">
+    <div class="grid mx-6 my-6 gap-6 h-[78vh]" style="grid-template-columns: 2fr 1fr;">
         <div class="rounded-xl bg-slate-50 overflow-hidden">
             <div id="map" class="h-[80vh]"></div>
         </div>
-        <div id="marker-details" class="rounded-xl bg-slate-50">
-            <div>
-                <h1 class="text-md font-medium">Beach report</h1>
-                <p class="text-sm text-zinc-400 ">weposds-sd-sd-d-ad-s-ad</p>
-                <img src="/images/094ddb19-d2d1-4337-940c-ac8e25774046/dirty">
+        <div id="marker-details" class="rounded-xl bg-slate-50 p-2 space-y-2 overflow-y-scroll overflow-x-hidden">
+            <div class="flex flex-row justify-between items-start">
+                <div class="flex flex-col">
+                    <h1 class="text-md font-medium">Beach report</h1>
+                    <p class="text-sm text-zinc-400 ">weposds-sd-sd-d-ad-s-ad</p>
+                    <div class="flex flex-row mt-1">
+                        <span class="mdi mdi-map-marker-outline text-sm"></span>
+                        <h3 class="text-sm font-medium">11.2323232N 23.232323E</h3>
+                    </div>
+                </div>
+                <div class="flex flex-row space-x-2 bg-red-100 text-red-500 px-2 py-1 rounded-md">
+                    <span class="mdi mdi-beach"></span>
+                    <h3 class="font-medium">dirty</h3>
+                </div>
+            </div>
+            <div class="h-0.5 bg-slate-100 w-full my-1"></div>
+
+            <div class="rounded-md overflow-hidden bg-slate-100">
+                <img alt="dirty image" src="/images/094ddb19-d2d1-4337-940c-ac8e25774046/dirty.png">
+                <p class="text-xs font-medium text-center uppercase tracking-wide p-1">Report image</p>
+            </div>
+
+            <div class="flex flex-row justify-between">
+                <div class="flex flex-row space-x-1 items-center">
+                    <span class="mdi mdi-account-outline text-xl"></span>
+                    <div class="flex flex-col">
+                        <h3 class="text-xs text-zinc-400">Report user</h3>
+                        <h1 class="text-md">ric</h1>
+                    </div>
+                </div>
+
+                <div class="flex flex-row space-x-1 items-center">
+                    <span class="mdi mdi-calendar-outline text-xl"></span>
+                    <div class="flex flex-col">
+                        <h3 class="text-xs text-zinc-400">Report date</h3>
+                        <h1 class="text-md">12-11-2023</h1>
+                    </div>
+                </div>
+            </div>
+
+            <div class="rounded-md overflow-hidden bg-slate-100">
+                <img alt="dirty image" src="/images/094ddb19-d2d1-4337-940c-ac8e25774046/dirty.png">
+                <p class="text-xs font-medium text-center uppercase tracking-wide p-1">Cleaned image</p>
+            </div>
+
+            <div class="flex flex-row justify-between">
+                <div class="flex flex-row space-x-1 items-center">
+                    <span class="mdi mdi-account-outline text-xl"></span>
+                    <div class="flex flex-col">
+                        <h3 class="text-xs text-zinc-400">Clean user</h3>
+                        <h1 class="text-md">tommy</h1>
+                    </div>
+                </div>
+
+                <div class="flex flex-row space-x-1 items-center">
+                    <span class="mdi mdi-calendar-outline text-xl"></span>
+                    <div class="flex flex-col">
+                        <h3 class="text-xs text-zinc-400">Clean date</h3>
+                        <h1 class="text-md">13-11-2023</h1>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

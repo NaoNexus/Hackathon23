@@ -4,8 +4,10 @@ extension RelativeDate on DateTime {
 
     if (duration.inHours == 0) {
       return '${duration.inMinutes} minutes ago';
-    } else {
+    } else if (duration.inDays == 0) {
       return '${duration.inHours} hours ago';
+    } else {
+      return '${duration.inDays} days ago';
     }
   }
 }

@@ -4,8 +4,9 @@ from helpers.logging_helper import logger
 
 import utilities
 import time
+import os
 
-from flask import Flask, request, jsonify, render_template, redirect
+from flask import Flask, request, current_app, jsonify, render_template, redirect, send_from_directory
 
 app = Flask(__name__)
 
@@ -53,6 +54,17 @@ def report_screen(id):
 
     return redirect("/reports", code=404)'''
 
+
+@app.route('/images/<path:filename>', methods=['GET', 'POST'])
+def download(filename):
+    try:
+        print(os.path.dirname(app.instance_path))
+        uploads = os.path.join(os.path.dirname(app.instance_path), 'images/')
+        logger.info(uploads)
+        return send_from_directory(uploads, filename)
+    except Exception as e:
+        logger.error(e)
+
 # Api calls
 # Reports calls
 
@@ -62,7 +74,7 @@ def info():
     return jsonify({'code': 200, 'status': 'online', 'elapsed time': utilities.getElapsedTime(startTime)}), 200
 
 
-@app.route('/api/login', methods=['GET'])
+@app.route('/api/login', methods=['POST'])
 def login():
     try:
         json = request.json
@@ -76,6 +88,25 @@ def login():
         else:
             logger.error('No nickname argument or password argument passed')
             return jsonify({'code': 500, 'message': 'No nickname or password was passed'}), 500
+    except Exception as e:
+        logger.error(str(e))
+        return jsonify({'code': 500, 'message': str(e)}), 500
+
+
+@app.route('/api/check_username', methods=['GET'])
+def check_username():
+    try:
+        json = request.json
+        if (json.get('nickname', '') != ''):
+            result = db_helper.get_user_by_nickname(
+                json['nickname'])
+            if (result == {}):
+                logger.error('Nickname already present')
+                return jsonify({'code': 500, 'message': 'Nickname already present'}), 500
+            return jsonify({'code': 200, 'message': 'OK', 'data': result}), 200
+        else:
+            logger.error('No nickname argument passed')
+            return jsonify({'code': 500, 'message': 'No nickname was passed'}), 500
     except Exception as e:
         logger.error(str(e))
         return jsonify({'code': 500, 'message': str(e)}), 500

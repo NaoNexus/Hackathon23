@@ -1,5 +1,5 @@
 import 'package:clean_beaches_app/api.dart';
-import 'package:clean_beaches_app/home_page.dart';
+import 'package:clean_beaches_app/utilities.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
@@ -11,17 +11,28 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  TextEditingController confirmPasswordController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
-  TextEditingController fullnameController = TextEditingController();
-  TextEditingController nicknameController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _surnameController = TextEditingController();
+  final TextEditingController _nicknameController = TextEditingController();
 
-  final String ip = '192.168.0.150';
-  final int port = 5000;
+  final String _ip = '192.168.0.150';
+  final int _port = 5000;
+
+  late Api _api;
+
+  final GlobalKey<FormState> _formKey = GlobalKey();
+
+  @override
+  void initState() {
+    _api = Api(ip: _ip, port: _port);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final Api api = Api(ip: ip, port: port);
     return GestureDetector(
       onTap: () {
         final currentFocus = FocusScope.of(context);
@@ -30,123 +41,217 @@ class _RegisterPageState extends State<RegisterPage> {
         }
       },
       child: Scaffold(
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text(
-                'Clean Beaches',
-                style: TextStyle(
-                  fontSize: 40,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 20),
-              const Text(
-                'Register',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 20),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: TextFormField(
-                  controller: fullnameController,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Full Name',
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: TextFormField(
-                  controller: nicknameController,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Nickname',
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: TextFormField(
-                  controller: passwordController,
-                  obscureText: true,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Password',
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: TextFormField(
-                  controller: confirmPasswordController,
-                  obscureText: true,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Confirm Password',
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, '/home');
-                },
-                child: const Text('Register'),
-              ),
-              const SizedBox(height: 20),
-              TextButton(
-                onPressed: () {
-                  //TODO: check passwords match
-                  api.postCredentials(
-                    context,
-                    fullnameController.text,
-                    nicknameController.text,
-                    passwordController.text,
-                  );
-
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const HomePage(),
-                    ),
-                  );
-                },
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10),
-                  child: RichText(
-                    text: TextSpan(
-                      text: 'Already have an account? ',
-                      style: const TextStyle(
-                        color: Colors.grey,
-                        fontSize: 13,
+        body: Container(
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/logo_green.png'),
+              fit: BoxFit.contain,
+              opacity: 0.1,
+            ),
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Center(
+            child: SingleChildScrollView(
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Create new account',
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.secondary,
+                        fontSize: 32,
+                        fontWeight: FontWeight.w500,
                       ),
-                      children: <TextSpan>[
-                        TextSpan(
-                          text: 'Login',
-                          style: const TextStyle(
-                            color: Colors.blue,
-                            fontSize: 13,
-                          ),
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = () {
-                              Navigator.pop(context);
+                    ),
+                    const SizedBox(height: 32),
+                    Row(
+                      children: [
+                        Flexible(
+                          child: TextFormField(
+                            controller: _nameController,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              contentPadding: const EdgeInsets.all(16),
+                              labelText: 'Name',
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'A name must be entered';
+                              }
+                              return null;
                             },
+                          ),
+                        ),
+                        const SizedBox(width: 16),
+                        Flexible(
+                          child: TextFormField(
+                            controller: _surnameController,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              contentPadding: const EdgeInsets.all(16),
+                              labelText: 'Surname',
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'A surname must be entered';
+                              }
+                              return null;
+                            },
+                          ),
                         ),
                       ],
                     ),
-                  ),
+                    const SizedBox(height: 16),
+                    TextFormField(
+                      controller: _nicknameController,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        contentPadding: const EdgeInsets.all(16),
+                        labelText: 'Nickname',
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'A nickname must be entered';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 16),
+                    TextFormField(
+                      controller: _passwordController,
+                      obscureText: true,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        contentPadding: const EdgeInsets.all(16),
+                        labelText: 'Password',
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'A password must be entered';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 16),
+                    TextFormField(
+                      controller: _confirmPasswordController,
+                      obscureText: true,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        labelText: 'Confirm Password',
+                        contentPadding: const EdgeInsets.all(16),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Password must be reentered';
+                        }
+                        if (value != _passwordController.text) {
+                          return 'Passwords must match';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 32),
+                    InkWell(
+                      onTap: () async {
+                        if (_formKey.currentState!.validate()) {
+                          try {
+                            await _api.register(
+                              name: _nameController.text,
+                              surname: _surnameController.text,
+                              nickname: _nicknameController.text,
+                              password: _passwordController.text,
+                            );
+                          } catch (e) {
+                            showSnackBar(
+                              context: context,
+                              text: e.toString(),
+                              icon: Icons.error_outline,
+                              backgroundColor: Theme.of(context)
+                                  .buttonTheme
+                                  .colorScheme!
+                                  .errorContainer,
+                              color: Theme.of(context)
+                                  .buttonTheme
+                                  .colorScheme!
+                                  .onErrorContainer,
+                            );
+                          }
+
+                          Navigator.popAndPushNamed(context, '/home');
+                        }
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Theme.of(context)
+                              .buttonTheme
+                              .colorScheme!
+                              .secondaryContainer,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        width: double.infinity,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        child: Text(
+                          'REGISTER',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onSecondaryContainer,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: 1.5,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.popAndPushNamed(context, '/login');
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(),
+                        child: RichText(
+                          text: TextSpan(
+                            text: 'Already have an account? ',
+                            style: const TextStyle(
+                              color: Colors.grey,
+                              fontSize: 14,
+                            ),
+                            children: <TextSpan>[
+                              TextSpan(
+                                text: 'Login',
+                                style: const TextStyle(
+                                  color: Colors.blue,
+                                  fontSize: 14,
+                                ),
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = () {
+                                    Navigator.pop(context);
+                                  },
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ],
+            ),
           ),
         ),
       ),

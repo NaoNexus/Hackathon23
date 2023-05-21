@@ -5,7 +5,7 @@ import 'package:clean_beaches_app/utilities.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:geolocator/geolocator.dart';
+import 'package:location/location.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({
@@ -47,15 +47,12 @@ class _HomePageState extends State<HomePage> {
                       FlutterMap(
                         mapController: _mapController,
                         options: MapOptions(
-                          center: _currentLocation,
-                          zoom: 13,
+                          slideOnBoundaries: true,
                         ),
                         children: [
                           TileLayer(
                             urlTemplate:
                                 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                            userAgentPackageName:
-                                'dev.fleaflet.flutter_map.example',
                           ),
                         ],
                       ),
@@ -107,15 +104,32 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> getLocation() async {
-    await Geolocator
-        .requestPermission(); //RIGA DEL CAZZO CI HO PERSO DUE ORE E MEZZA E NON AVEVO CHIESTO IL PERMESSOOOOOOOO
+    Location location = Location();
 
-    Position position = await Geolocator.getCurrentPosition(
-      desiredAccuracy: LocationAccuracy.high,
-    );
-    setState(() {
-      _currentLocation = LatLng(position.latitude, position.longitude);
-    });
+    bool serviceEnabled;
+    PermissionStatus permissionGranted;
+    LocationData locationData;
+
+    serviceEnabled = await location.serviceEnabled();
+    if (!serviceEnabled) {
+      serviceEnabled = await location.requestService();
+      if (!serviceEnabled) {
+        return;
+      }
+    }
+
+    permissionGranted = await location.hasPermission();
+    if (permissionGranted == PermissionStatus.denied) {
+      permissionGranted = await location.requestPermission();
+      if (permissionGranted != PermissionStatus.granted) {
+        return;
+      }
+    }
+
+    locationData = await location.getLocation();
+
+    _currentLocation =
+        LatLng(locationData.latitude ?? 0, locationData.longitude ?? 0);
   }
 }
 
