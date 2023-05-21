@@ -17,13 +17,17 @@ class Report {
     required this.dirtyImageExtension,
     required this.cleanImageExtension,
   });
-/* 
+
   factory Report.fromJson(Map<String, dynamic> json) => Report(
-        id: json['id'],
-        position: position,
-        cleaned: cleaned,
-        date: date,
-        details: details,
-        imagePath: imagePath,
-      ); */
+        id: json['id'] ?? '',
+        position: LatLng(
+          json['latitude'] ?? 0.0,
+          json['longitude'] ?? 0.0,
+        ),
+        cleaned: json['cleaned'] ?? false,
+        date: DateTime.parse(json['date'] ?? ''),
+        details: json['details'] ?? '',
+        dirtyImageExtension: json['dirtyImageExtension'] ?? '',
+        cleanImageExtension: json['cleanImageExtension'] ?? '',
+      );
 }
