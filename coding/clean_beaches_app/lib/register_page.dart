@@ -2,6 +2,7 @@ import 'package:clean_beaches_app/api.dart';
 import 'package:clean_beaches_app/utilities.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -24,6 +25,8 @@ class _RegisterPageState extends State<RegisterPage> {
   late Api _api;
 
   final GlobalKey<FormState> _formKey = GlobalKey();
+
+  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
   @override
   void initState() {
@@ -174,6 +177,15 @@ class _RegisterPageState extends State<RegisterPage> {
                               surname: _surnameController.text,
                               nickname: _nicknameController.text,
                               password: _passwordController.text,
+                            );
+
+                            _prefs.then(
+                              (SharedPreferences prefs) {
+                                prefs.setString(
+                                    'nickname', _nicknameController.text);
+                                prefs.setString(
+                                    'password', _passwordController.text);
+                              },
                             );
 
                             Navigator.popAndPushNamed(context, '/home');
