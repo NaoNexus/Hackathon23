@@ -1,6 +1,8 @@
+import 'package:clean_beaches_app/api.dart';
 import 'package:clean_beaches_app/report.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'camera_screen.dart';
 
@@ -13,8 +15,11 @@ class ReportDetailsPage extends StatefulWidget {
 }
 
 class _ReportDetailsPageState extends State<ReportDetailsPage> {
+  late Api _api;
+
   @override
   void initState() {
+    _api = Api(ip: '192.168.0.150', port: 5000);
     super.initState();
   }
 
@@ -163,54 +168,54 @@ class _ReportDetailsPageState extends State<ReportDetailsPage> {
                             decoration: BoxDecoration(
                               color: Colors.grey.shade50,
                             ),
-                            child: Column(
-                              children: [
-                                Image.network(
-                                  'http://192.168.0.150:5000/images/${widget.report.id}/dirty.${widget.report.dirtyImageExtension}',
+                            child: Column(children: [
+                              Image.network(
+                                'http://192.168.0.150:5000/images/${widget.report.id}/dirty.${widget.report.dirtyImageExtension}',
+                                fit: BoxFit.cover,
+                                width: double.infinity,
+                              ),
+                              const Text(
+                                'DIRTY IMAGE',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  letterSpacing: 1.25,
+                                  fontWeight: FontWeight.w600,
                                 ),
-                                const Text(
-                                  'DIRTY IMAGE',
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    letterSpacing: 1.25,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                                const SizedBox(height: 8),
-                                Row(
-                                  children: [
-                                    Icon(
-                                      Icons.account_circle_outlined,
-                                      size: 16,
-                                      color: Colors.grey.shade500,
-                                    ),
-                                    Text(
-                                      widget.report.userReported,
-                                      style: const TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                    const Spacer(),
-                                    Icon(
-                                      Icons.calendar_today,
-                                      size: 16,
-                                      color: Colors.grey.shade500,
-                                    ),
-                                    Text(
-                                      widget.report.dateReported
-                                          .toString()
-                                          .split('.')[0],
-                                      style: const TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
+                              ),
+                            ]),
                           ),
+                        ),
+                        const SizedBox(height: 8),
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.account_circle_outlined,
+                              size: 16,
+                              color: Colors.grey.shade500,
+                            ),
+                            Text(
+                              widget.report.userReported,
+                              style: const TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            const Spacer(),
+                            Icon(
+                              Icons.calendar_today,
+                              size: 16,
+                              color: Colors.grey.shade500,
+                            ),
+                            Text(
+                              widget.report.dateReported
+                                  .toString()
+                                  .split('.')[0],
+                              style: const TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
                         ),
                         if (widget.report.dateCleaned != null)
                           ClipRRect(
@@ -223,6 +228,8 @@ class _ReportDetailsPageState extends State<ReportDetailsPage> {
                                 children: [
                                   Image.network(
                                     'http://192.168.0.150:5000/images/${widget.report.id}/clean.${widget.report.dirtyImageExtension}',
+                                    fit: BoxFit.cover,
+                                    width: double.infinity,
                                   ),
                                   const Text(
                                     'CLEAN IMAGE',
@@ -286,12 +293,29 @@ class _ReportDetailsPageState extends State<ReportDetailsPage> {
                   MaterialPageRoute(
                     builder: (context) => CameraScreen(
                       detailsField: false,
-                      onSubmit: (filePath, details) {},
+                      onSubmit: (filePath, details) async {
+                        SharedPreferences prefs =
+                            await SharedPreferences.getInstance();
+
+                        String nickname = prefs.getString('nickname') ?? '';
+
+                        Report report = widget.report.copyWith(
+                          dateCleaned: DateTime.now(),
+                          userCleaned: nickname,
+                        );
+
+                        await _api.sendReport(
+                          context: context,
+                          report: report,
+                          cleanImagePath: filePath,
+                        );
+
+                        Navigator.pop(context);
+                      },
                     ),
                   ),
                 );
               },
-              foregroundColor: Colors.white,
               label: const Text('CLEAN BEACH'),
               icon: const Icon(Icons.cleaning_services),
             )

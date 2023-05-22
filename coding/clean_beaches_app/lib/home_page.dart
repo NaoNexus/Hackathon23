@@ -38,7 +38,10 @@ class _HomePageState extends State<HomePage> {
     _api = Api(ip: '192.168.0.150', port: 5000);
     _reports = _api.getReports();
     _timer = Timer.periodic(const Duration(seconds: 5), (timer) {
-      _reports = _api.getReports();
+      setState(() {
+        print('0a');
+        _reports = _api.getReports();
+      });
     });
     super.initState();
   }
@@ -162,8 +165,21 @@ class _HomePageState extends State<HomePage> {
                       _visualizedReports.isNotEmpty
                           ? ListView.separated(
                               shrinkWrap: true,
-                              itemBuilder: (_, index) => BeachReportCard(
-                                report: _visualizedReports[index],
+                              itemBuilder: (_, index) => GestureDetector(
+                                onTap: () async {
+                                  await Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (_) => ReportDetailsPage(
+                                        report: _visualizedReports[index],
+                                      ),
+                                    ),
+                                  );
+
+                                  _reports = _api.getReports();
+                                },
+                                child: BeachReportCard(
+                                  report: _visualizedReports[index],
+                                ),
                               ),
                               separatorBuilder: (_, __) =>
                                   const SizedBox(height: 8),
@@ -292,98 +308,89 @@ class BeachReportCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (_) => ReportDetailsPage(
-            report: report,
-          ),
-        ),
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.grey.shade100,
+        borderRadius: BorderRadius.circular(16),
       ),
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.grey.shade100,
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(8),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+      child: Padding(
+        padding: const EdgeInsets.all(8),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Beach',
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      report.details,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ],
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      color: report.dateCleaned != null
+                          ? Colors.green.shade100
+                          : Colors.red.shade100),
+                  padding: const EdgeInsets.all(4),
+                  child: Row(
                     children: [
-                      const Text(
-                        'Beach',
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Text(
-                        report.details,
-                        style: const TextStyle(
-                          fontSize: 14,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
+                      Icon(
+                        report.dateCleaned != null
+                            ? Icons.flare
+                            : Icons.cleaning_services_outlined,
+                        size: 18,
                         color: report.dateCleaned != null
-                            ? Colors.green.shade100
-                            : Colors.red.shade100),
-                    padding: const EdgeInsets.all(4),
-                    child: Row(
-                      children: [
-                        Icon(
-                          report.dateCleaned != null
-                              ? Icons.flare
-                              : Icons.cleaning_services_outlined,
-                          size: 18,
+                            ? Colors.green
+                            : Colors.red,
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        report.dateCleaned != null
+                            ? 'CLEANED'
+                            : 'NEEDS CLEANING',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
                           color: report.dateCleaned != null
                               ? Colors.green
                               : Colors.red,
                         ),
-                        const SizedBox(width: 8),
-                        Text(
-                          report.dateCleaned != null
-                              ? 'CLEANED'
-                              : 'NEEDS CLEANING',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                            color: report.dateCleaned != null
-                                ? Colors.green
-                                : Colors.red,
-                          ),
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Text(
-                    report.dateReported.relativeDateString,
-                    style: const TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey,
-                    ),
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Text(
+                  report.dateReported.relativeDateString,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    color: Colors.grey,
                   ),
-                ],
-              ),
-            ],
-          ),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );

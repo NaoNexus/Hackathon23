@@ -17,7 +17,7 @@ class Api {
 
   String get address => '$ip${port != null ? ':$port' : ''}';
 
-  void sendReport(
+  Future<void> sendReport(
       {required BuildContext context,
       required Report report,
       String? dirtyImagePath,
