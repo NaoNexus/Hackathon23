@@ -175,6 +175,8 @@ class _RegisterPageState extends State<RegisterPage> {
                               nickname: _nicknameController.text,
                               password: _passwordController.text,
                             );
+
+                            Navigator.popAndPushNamed(context, '/home');
                           } catch (e) {
                             showSnackBar(
                               context: context,
@@ -190,8 +192,6 @@ class _RegisterPageState extends State<RegisterPage> {
                                   .onErrorContainer,
                             );
                           }
-
-                          Navigator.popAndPushNamed(context, '/home');
                         }
                       },
                       child: Container(

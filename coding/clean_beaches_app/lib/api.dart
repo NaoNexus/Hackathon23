@@ -92,7 +92,7 @@ class Api {
         'name': name,
         'surname': surname,
         'nickname': nickname,
-        'password': password,
+        'password': encryptWithSHA256(password),
       }),
     );
 
