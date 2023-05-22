@@ -24,7 +24,7 @@ class Api {
       String? cleanImagePath}) async {
     try {
       http.MultipartRequest request =
-          http.MultipartRequest('POST', Uri.http(address, 'api/report'))
+          http.MultipartRequest('POST', Uri.http(address, '/api/report'))
             ..fields['id'] = report.id
             ..fields['latitude'] = report.position.latitude.toString()
             ..fields['longitude'] = report.position.longitude.toString()
