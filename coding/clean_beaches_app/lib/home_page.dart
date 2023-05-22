@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 
@@ -6,7 +7,6 @@ import 'package:clean_beaches_app/camera_screen.dart';
 import 'package:clean_beaches_app/relative_date.dart';
 import 'package:clean_beaches_app/report.dart';
 import 'package:clean_beaches_app/report_details_page.dart';
-import 'package:clean_beaches_app/utilities.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
@@ -29,15 +29,24 @@ class _HomePageState extends State<HomePage> {
   List<Report> _visualizedReports = [];
   late Future<List<Report>> _reports;
 
+  late Timer _timer;
+
   LatLng _currentLocation = LatLng(45.345, -122.55);
 
   @override
   void initState() {
     _api = Api(ip: '192.168.0.150', port: 5000);
     _reports = _api.getReports();
-    _visualizedReports = testData;
-    getLocation();
+    _timer = Timer.periodic(const Duration(seconds: 5), (timer) {
+      _reports = _api.getReports();
+    });
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
   }
 
   @override
@@ -150,14 +159,51 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                       const SizedBox(height: 8),
-                      ListView.separated(
-                        shrinkWrap: true,
-                        itemBuilder: (_, index) => BeachReportCard(
-                          report: _visualizedReports[index],
-                        ),
-                        separatorBuilder: (_, __) => const SizedBox(height: 8),
-                        itemCount: _visualizedReports.length,
-                      ),
+                      _visualizedReports.isNotEmpty
+                          ? ListView.separated(
+                              shrinkWrap: true,
+                              itemBuilder: (_, index) => BeachReportCard(
+                                report: _visualizedReports[index],
+                              ),
+                              separatorBuilder: (_, __) =>
+                                  const SizedBox(height: 8),
+                              itemCount: _visualizedReports.length,
+                            )
+                          : Container(
+                              decoration: BoxDecoration(
+                                color: Colors.grey.shade100,
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              width: double.infinity,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8),
+                                child: Column(
+                                  children: [
+                                    Icon(
+                                      Icons.inbox_outlined,
+                                      size: 96,
+                                      color: Colors.grey.shade400,
+                                    ),
+                                    const SizedBox(height: 16),
+                                    Text(
+                                      'NO BEACH REPORTS',
+                                      style: TextStyle(
+                                        color: Colors.grey.shade700,
+                                        fontSize: 24,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                    Text(
+                                      'Try adding a new report',
+                                      style: TextStyle(
+                                        color: Colors.grey.shade400,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
                     ],
                   ),
                 );

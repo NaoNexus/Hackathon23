@@ -56,13 +56,13 @@ class Home extends StatelessWidget {
                   Icon(
                     Icons.error_outline,
                     size: 96,
-                    color: Theme.of(context).colorScheme.error,
+                    color: Colors.red.shade400,
                   ),
                   const SizedBox(height: 16),
                   Text(
                     'ERROR',
                     style: TextStyle(
-                      color: Theme.of(context).colorScheme.error,
+                      color: Colors.red.shade700,
                       fontSize: 32,
                       fontWeight: FontWeight.w600,
                     ),
@@ -70,7 +70,7 @@ class Home extends StatelessWidget {
                   Text(
                     snapshot.error?.toString() ?? '',
                     style: TextStyle(
-                      color: Theme.of(context).colorScheme.onErrorContainer,
+                      color: Colors.red.shade900,
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
                     ),
