@@ -22,8 +22,7 @@ class Report {
 
   factory Report.fromJson(Map<String, dynamic> json) => Report(
         id: json['id'],
-        position: LatLng(double.tryParse(json['latitude']) ?? 0,
-            double.tryParse(json['longitude']) ?? 0),
+        position: LatLng(json['latitude'] ?? 0, json['longitude'] ?? 0),
         dateCleaned: DateTime.tryParse(json['dateCleaned']),
         dateReported: DateTime.parse(json['dateReported']),
         userCleaned: json['userCleaned'] ?? '',
@@ -31,5 +30,5 @@ class Report {
         details: json['details'],
         dirtyImageExtension: json['dirtyImageExtension'],
         cleanImageExtension: json['cleanImageExtension'],
-      ); 
+      );
 }
