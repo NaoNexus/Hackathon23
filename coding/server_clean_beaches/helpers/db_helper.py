@@ -134,7 +134,7 @@ class DB:
 
                 return cur.statusmessage
 
-    def save_beach_report(self, report):
+    def save_beach_report(self, report, clean_image, dirty_image):
         with self.connection:
             with self.connection.cursor() as cur:
                 if (report.get('dateReported', '') == ''):
@@ -149,7 +149,11 @@ class DB:
                     for tupla in cur:
                         report['id'] = tupla[0]
 
-                    self.file_helper.save_beach_report_images(report)
+                    if dirty_image.filename != '':
+                        clean_image.save(f"images/{report['id']}/clean.png")
+
+                    if dirty_image.filename != '':
+                        clean_image.save(f"images/{report['id']}/dirty.png")
 
                 else:
                     cur.execute('''
@@ -158,7 +162,11 @@ class DB:
                         WHERE id::text = %s; ''',
                                 (report['dateReported'].split('.')[0], report.get('dateCleaned', '').split('.')[0], report['latitude'], report['longitude'], report.get('details', ''), report['dirtyImageExtension'], report.get('cleanImageExtension', ''), report['userReported'], report.get('userCleaned', ''), report['id']))
 
-                    self.file_helper.save_beach_report_images(report)
+                    if dirty_image.filename != '':
+                        clean_image.save(f"images/{report['id']}/clean.png")
+
+                    if dirty_image.filename != '':
+                        clean_image.save(f"images/{report['id']}/dirty.png")
 
                 return cur.statusmessage
 

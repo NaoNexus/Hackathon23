@@ -288,6 +288,7 @@ class _ReportDetailsPageState extends State<ReportDetailsPage> {
                   ),
                 );
               },
+              foregroundColor: Colors.white,
               label: const Text('CLEAN BEACH'),
               icon: const Icon(Icons.cleaning_services),
             )
