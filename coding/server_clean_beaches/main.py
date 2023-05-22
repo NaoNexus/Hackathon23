@@ -136,10 +136,12 @@ def save_beach_report():
     try:
         if request.content_type == 'application/json':
             json = request.json
-            return jsonify({'code': 201, 'message': 'OK', 'data': db_helper.save_beach_report(json)}), 201
+            return jsonify({'code': 201, 'message': 'OK', 'data': db_helper.save_beach_report(json, request.files['dirtyImage'], request.files['cleanImage'])}), 201
         else:
             json = request.form.to_dict()
-            db_helper.save_beach_report(json)
+            db_helper.save_beach_report(
+                json, request.files['dirtyImage'], request.files['cleanImage'])
+
             return redirect("/reports", code=302)
     except Exception as e:
         logger.error(str(e))
@@ -165,9 +167,9 @@ def report(id):
                     json = request.form.to_dict()
                 json['id'] = id
                 if request.content_type == 'application/json':
-                    return jsonify({'code': 201, 'message': 'OK', 'data': db_helper.save_beach_report(json)}), 201
+                    return jsonify({'code': 201, 'message': 'OK', 'data': db_helper.save_beach_report(json, request.files['dirtyImage'], request.files['cleanImage'])}), 201
                 else:
-                    db_helper.save_report(json)
+                    db_helper.save_beach_report(json)
                     return redirect("/reports", code=302)
             except Exception as e:
                 logger.error(str(e))

@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:clean_beaches_app/report.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -283,47 +281,17 @@ class _ReportDetailsPageState extends State<ReportDetailsPage> {
       floatingActionButton: widget.report.dateCleaned == null
           ? FloatingActionButton.extended(
               onPressed: () {
-                showDialog(
-                  context: context,
-                  barrierDismissible: true,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: const Text('Are you sure?'),
-                      content: const SingleChildScrollView(
-                        child: ListBody(
-                          children: <Widget>[
-                            Text('Is the beach fully cleaned?'),
-                          ],
-                        ),
-                      ),
-                      actions: <Widget>[
-                        TextButton(
-                          child: const Text('Yes'),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                        TextButton(
-                          child: const Text('No'),
-                          onPressed: () {
-                            final Directory directory =
-                                Directory('/path/to/existing/folder');
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    CameraScreen(outputPath: directory.path),
-                              ),
-                            );
-                            //Navigator.of(context).pop();
-                          },
-                        ),
-                      ],
-                    );
-                  },
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CameraScreen(
+                      detailsField: false,
+                      onSubmit: (filePath, details) {},
+                    ),
+                  ),
                 );
               },
+              foregroundColor: Colors.white,
               label: const Text('CLEAN BEACH'),
               icon: const Icon(Icons.cleaning_services),
             )

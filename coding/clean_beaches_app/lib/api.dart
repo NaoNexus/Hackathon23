@@ -3,10 +3,11 @@ import 'dart:developer';
 
 import 'package:camera/camera.dart';
 import 'package:clean_beaches_app/report.dart';
+import 'package:clean_beaches_app/utilities.dart';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:latlong2/latlong.dart';
 
 class Api {
   String ip;
@@ -16,7 +17,57 @@ class Api {
 
   String get address => '$ip${port != null ? ':$port' : ''}';
 
-  void beachCleanedDetails({
+  void sendReport(
+      {required BuildContext context,
+      required Report report,
+      String? dirtyImagePath,
+      String? cleanImagePath}) async {
+    try {
+      http.MultipartRequest request =
+          http.MultipartRequest('POST', Uri.http(address, 'api/report'))
+            ..fields['id'] = report.id
+            ..fields['latitude'] = report.position.latitude.toString()
+            ..fields['longitude'] = report.position.longitude.toString()
+            ..fields['dateReported'] = report.dateReported.toIso8601String()
+            ..fields['dateCleaned'] =
+                report.dateCleaned?.toIso8601String() ?? ''
+            ..fields['userReported'] = report.userReported
+            ..fields['userCleaned'] = report.userCleaned
+            ..fields['details'] = report.details
+            ..fields['dirtyImageExtension'] = report.dirtyImageExtension
+            ..fields['cleanImageExtension'] = report.cleanImageExtension;
+
+      if (dirtyImagePath != null && dirtyImagePath.isNotEmpty) {
+        request.files.add(
+          await http.MultipartFile.fromPath('dirtyImage', dirtyImagePath),
+        );
+      }
+
+      if (cleanImagePath != null && cleanImagePath.isNotEmpty) {
+        request.files.add(
+          await http.MultipartFile.fromPath('cleanImage', cleanImagePath),
+        );
+      }
+
+      request.send().then((response) {
+        if (response.statusCode != 200) {
+          showSnackBar(
+            context: context,
+            text: 'Error when sending report',
+            icon: Icons.error_outline,
+            backgroundColor:
+                Theme.of(context).buttonTheme.colorScheme!.errorContainer,
+            color: Theme.of(context).buttonTheme.colorScheme!.onErrorContainer,
+          );
+          return;
+        }
+      });
+    } catch (e) {
+      log(e.toString());
+    }
+  }
+
+  /*void beachCleanedDetails({
     required String id,
     required CameraImage image,
     required DateTime dateCleaned,
@@ -60,7 +111,7 @@ class Api {
     } catch (e) {
       log(e.toString());
     }
-  }
+  }*/
 
   Future<bool> checkNickname({required String nickname}) async {
     try {
@@ -92,7 +143,7 @@ class Api {
         'name': name,
         'surname': surname,
         'nickname': nickname,
-        'password': password,
+        'password': encryptWithSHA256(password),
       }),
     );
 

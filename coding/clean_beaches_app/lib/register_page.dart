@@ -2,6 +2,7 @@ import 'package:clean_beaches_app/api.dart';
 import 'package:clean_beaches_app/utilities.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -24,6 +25,8 @@ class _RegisterPageState extends State<RegisterPage> {
   late Api _api;
 
   final GlobalKey<FormState> _formKey = GlobalKey();
+
+  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
   @override
   void initState() {
@@ -74,7 +77,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             controller: _nameController,
                             decoration: InputDecoration(
                               border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8),
+                                borderRadius: BorderRadius.circular(12),
                               ),
                               contentPadding: const EdgeInsets.all(16),
                               labelText: 'Name',
@@ -93,7 +96,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             controller: _surnameController,
                             decoration: InputDecoration(
                               border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8),
+                                borderRadius: BorderRadius.circular(12),
                               ),
                               contentPadding: const EdgeInsets.all(16),
                               labelText: 'Surname',
@@ -113,7 +116,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       controller: _nicknameController,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(12),
                         ),
                         contentPadding: const EdgeInsets.all(16),
                         labelText: 'Nickname',
@@ -131,7 +134,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       obscureText: true,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(12),
                         ),
                         contentPadding: const EdgeInsets.all(16),
                         labelText: 'Password',
@@ -149,7 +152,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       obscureText: true,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(12),
                         ),
                         labelText: 'Confirm Password',
                         contentPadding: const EdgeInsets.all(16),
@@ -175,6 +178,17 @@ class _RegisterPageState extends State<RegisterPage> {
                               nickname: _nicknameController.text,
                               password: _passwordController.text,
                             );
+
+                            _prefs.then(
+                              (SharedPreferences prefs) {
+                                prefs.setString(
+                                    'nickname', _nicknameController.text);
+                                prefs.setString(
+                                    'password', _passwordController.text);
+                              },
+                            );
+
+                            Navigator.popAndPushNamed(context, '/home');
                           } catch (e) {
                             showSnackBar(
                               context: context,
@@ -190,8 +204,6 @@ class _RegisterPageState extends State<RegisterPage> {
                                   .onErrorContainer,
                             );
                           }
-
-                          Navigator.popAndPushNamed(context, '/home');
                         }
                       },
                       child: Container(
@@ -200,7 +212,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               .buttonTheme
                               .colorScheme!
                               .secondaryContainer,
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(12),
                         ),
                         width: double.infinity,
                         padding: const EdgeInsets.symmetric(vertical: 16),

@@ -22,6 +22,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF368db3)),
         useMaterial3: true,
       ),
+      debugShowCheckedModeBanner: false,
       initialRoute: '/',
       routes: {
         '/': (_) => const Home(),
@@ -46,7 +47,9 @@ class Home extends StatelessWidget {
     return FutureBuilder(
       future: login(),
       builder: (context, snapshot) {
-        if (snapshot.hasError && !snapshot.error.toString().contains('wrong')) {
+        if (snapshot.hasError &&
+            !snapshot.error.toString().contains('wrong') &&
+            !snapshot.error.toString().contains('passed')) {
           return Scaffold(
             body: Center(
               child: Column(
@@ -56,13 +59,13 @@ class Home extends StatelessWidget {
                   Icon(
                     Icons.error_outline,
                     size: 96,
-                    color: Theme.of(context).colorScheme.error,
+                    color: Colors.red.shade400,
                   ),
                   const SizedBox(height: 16),
                   Text(
                     'ERROR',
                     style: TextStyle(
-                      color: Theme.of(context).colorScheme.error,
+                      color: Colors.red.shade700,
                       fontSize: 32,
                       fontWeight: FontWeight.w600,
                     ),
@@ -70,7 +73,7 @@ class Home extends StatelessWidget {
                   Text(
                     snapshot.error?.toString() ?? '',
                     style: TextStyle(
-                      color: Theme.of(context).colorScheme.onErrorContainer,
+                      color: Colors.red.shade900,
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
                     ),
@@ -80,7 +83,9 @@ class Home extends StatelessWidget {
             ),
           );
         }
-        if (snapshot.hasData || snapshot.error.toString().contains('wrong')) {
+        if (snapshot.hasData ||
+            snapshot.error.toString().contains('wrong') ||
+            snapshot.error.toString().contains('passed')) {
           if ((snapshot.data ?? '') == 'OK') {
             return const HomePage();
           } else {
