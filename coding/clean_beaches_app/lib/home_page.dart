@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:developer';
-import 'dart:io';
 
 import 'package:clean_beaches_app/api.dart';
 import 'package:clean_beaches_app/camera_screen.dart';
@@ -218,11 +217,10 @@ class _HomePageState extends State<HomePage> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-          final Directory directory = Directory('/path/to/existing/folder');
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => CameraScreen(outputPath: directory.path),
+              builder: (context) => const CameraScreen(),
             ),
           );
         },
