@@ -46,7 +46,9 @@ class Home extends StatelessWidget {
     return FutureBuilder(
       future: login(),
       builder: (context, snapshot) {
-        if (snapshot.hasError && !snapshot.error.toString().contains('wrong')) {
+        if (snapshot.hasError &&
+            !snapshot.error.toString().contains('wrong') &&
+            !snapshot.error.toString().contains('passed')) {
           return Scaffold(
             body: Center(
               child: Column(
@@ -80,7 +82,9 @@ class Home extends StatelessWidget {
             ),
           );
         }
-        if (snapshot.hasData || snapshot.error.toString().contains('wrong')) {
+        if (snapshot.hasData ||
+            snapshot.error.toString().contains('wrong') ||
+            snapshot.error.toString().contains('passed')) {
           if ((snapshot.data ?? '') == 'OK') {
             return const HomePage();
           } else {

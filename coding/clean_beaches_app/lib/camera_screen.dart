@@ -74,29 +74,56 @@ class _CameraScreenState extends State<CameraScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: const Text('Camera Screen'),
       ),
       body: Column(
         children: [
-          SizedBox(
-            height: 600,
-            width: double.infinity,
-            child: FutureBuilder<void>(
-              future: _initializeControllerFuture,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.done) {
-                  return CameraPreview(_controller);
-                } else {
-                  return const Center(child: CircularProgressIndicator());
-                }
-              },
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: SizedBox(
+              height: 600,
+              width: double.infinity,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(16),
+                child: FutureBuilder<void>(
+                  future: _initializeControllerFuture,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      return CameraPreview(_controller);
+                    } else {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                  },
+                ),
+              ),
             ),
           ),
-          const SizedBox(height: 20),
-          FloatingActionButton(
-            onPressed: _captureAndSaveImage,
-            child: const Icon(Icons.camera),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: [
+                Flexible(
+                  child: TextFormField(
+                    controller: null,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      contentPadding: const EdgeInsets.all(16),
+                      labelText: 'Details',
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 15),
+                FloatingActionButton(
+                  onPressed: _captureAndSaveImage,
+                  elevation: 0,
+                  child: const Icon(Icons.camera),
+                ),
+              ],
+            ),
           ),
         ],
       ),
