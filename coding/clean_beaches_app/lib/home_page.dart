@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({
@@ -96,7 +97,7 @@ class _HomePageState extends State<HomePage> {
                   child: Column(
                     children: [
                       SizedBox(
-                        height: 200,
+                        height: 280,
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(8),
                           child: Stack(
@@ -220,7 +221,36 @@ class _HomePageState extends State<HomePage> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => const CameraScreen(),
+              builder: (context) => CameraScreen(
+                detailsField: true,
+                onSubmit: (String filePath, String? details) async {
+                  SharedPreferences prefs =
+                      await SharedPreferences.getInstance();
+
+                  String nickname = prefs.getString('nickname') ?? '';
+
+                  Position location = await Geolocator.getCurrentPosition(
+                    desiredAccuracy: LocationAccuracy.high,
+                  );
+
+                  Report report = Report(
+                    id: '',
+                    dateReported: DateTime.now(),
+                    userReported: nickname,
+                    userCleaned: '',
+                    cleanImageExtension: 'png',
+                    dirtyImageExtension: 'png',
+                    details: details!,
+                    position: LatLng(location.latitude, location.longitude),
+                  );
+
+                  _api.sendReport(
+                    context: context,
+                    report: report,
+                    dirtyImagePath: filePath,
+                  );
+                },
+              ),
             ),
           );
         },

@@ -11,7 +11,7 @@
 
 
     <application
-        android:label="clean_beaches_app"
+        android:label="EcoTide"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
