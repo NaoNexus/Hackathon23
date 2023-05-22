@@ -74,7 +74,7 @@ class _LoginPageState extends State<LoginPage> {
                       controller: _nicknameController,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(12),
                         ),
                         contentPadding: const EdgeInsets.all(16),
                         labelText: 'Nickname',
@@ -92,7 +92,7 @@ class _LoginPageState extends State<LoginPage> {
                       obscureText: true,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(12),
                         ),
                         contentPadding: const EdgeInsets.all(16),
                         labelText: 'Password',
@@ -108,13 +108,13 @@ class _LoginPageState extends State<LoginPage> {
                     SizedBox(
                       width: double.infinity,
                       child: Material(
-                        borderRadius: BorderRadius.circular(8),
+                        borderRadius: BorderRadius.circular(12),
                         color: Theme.of(context)
                             .buttonTheme
                             .colorScheme!
                             .secondaryContainer,
                         child: InkWell(
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(12),
                           onTap: () async {
                             if (_formKey.currentState!.validate()) {
                               try {

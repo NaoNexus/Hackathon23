@@ -74,7 +74,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             controller: _nameController,
                             decoration: InputDecoration(
                               border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8),
+                                borderRadius: BorderRadius.circular(12),
                               ),
                               contentPadding: const EdgeInsets.all(16),
                               labelText: 'Name',
@@ -93,7 +93,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             controller: _surnameController,
                             decoration: InputDecoration(
                               border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8),
+                                borderRadius: BorderRadius.circular(12),
                               ),
                               contentPadding: const EdgeInsets.all(16),
                               labelText: 'Surname',
@@ -113,7 +113,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       controller: _nicknameController,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(12),
                         ),
                         contentPadding: const EdgeInsets.all(16),
                         labelText: 'Nickname',
@@ -131,7 +131,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       obscureText: true,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(12),
                         ),
                         contentPadding: const EdgeInsets.all(16),
                         labelText: 'Password',
@@ -149,7 +149,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       obscureText: true,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(12),
                         ),
                         labelText: 'Confirm Password',
                         contentPadding: const EdgeInsets.all(16),
@@ -200,7 +200,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               .buttonTheme
                               .colorScheme!
                               .secondaryContainer,
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(12),
                         ),
                         width: double.infinity,
                         padding: const EdgeInsets.symmetric(vertical: 16),

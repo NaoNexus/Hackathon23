@@ -284,7 +284,10 @@ class _ReportDetailsPageState extends State<ReportDetailsPage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const CameraScreen(),
+                    builder: (context) => CameraScreen(
+                      detailsField: false,
+                      onSubmit: (filePath, details) {},
+                    ),
                   ),
                 );
               },
