@@ -150,10 +150,10 @@ class DB:
                         report['id'] = tupla[0]
 
                     if dirty_image.filename != '':
-                        clean_image.save(f"images/{report['id']}/clean.png")
+                        dirty_image.save(f"images/{report['id']}/dirty.png")
 
-                    if dirty_image.filename != '':
-                        clean_image.save(f"images/{report['id']}/dirty.png")
+                    if clean_image.filename != '':
+                        dirty_image.save(f"images/{report['id']}/clean.png")
 
                 else:
                     cur.execute('''
@@ -162,10 +162,10 @@ class DB:
                         WHERE id::text = %s; ''',
                                 (report['dateReported'].split('.')[0], report.get('dateCleaned', '').split('.')[0], report['latitude'], report['longitude'], report.get('details', ''), report['dirtyImageExtension'], report.get('cleanImageExtension', ''), report['userReported'], report.get('userCleaned', ''), report['id']))
 
-                    if dirty_image.filename != '':
+                    if dirty_image != '' and dirty_image.filename != '':
                         clean_image.save(f"images/{report['id']}/clean.png")
 
-                    if dirty_image.filename != '':
+                    if clean_image != '' and dirty_image.filename != '':
                         clean_image.save(f"images/{report['id']}/dirty.png")
 
                 return cur.statusmessage
