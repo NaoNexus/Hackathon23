@@ -79,18 +79,87 @@ class _CameraScreenState extends State<CameraScreen> {
 
     try {
       final image = await _controller.takePicture();
+      //dialog to send image or not
 
-      image.saveTo(filePath);
+      //ignore: use_build_context_synchronously
+      await showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('Send image?'),
+            content: ClipRRect(
+              borderRadius: BorderRadius.circular(8.0),
+              child: Image.file(
+                File(image.path),
+                width: 200,
+                height: 200,
+              ),
+            ),
+            actions: [
+              Row(
+                children: [
+                  Flexible(
+                    child: GestureDetector(
+                      onTap: () {
+                        if (widget.detailsField) {
+                          widget.onSubmit(filePath, _detailsController.text);
+                          Navigator.pop(context);
+                          Navigator.pop(context);
+                          return;
+                        }
 
-      if (widget.detailsField) {
-        widget.onSubmit(filePath, _detailsController.text);
-        Navigator.pop(context);
-        return;
-      }
-
-      widget.onSubmit(filePath, null);
-
-      Navigator.pop(context);
+                        widget.onSubmit(filePath, null);
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: const Color.fromARGB(255, 122, 195, 125),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        width: double.infinity,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        child: const Text(
+                          'YES',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: 1.5,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 20),
+                  Flexible(
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Color.fromARGB(255, 229, 113, 104),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        width: double.infinity,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        child: const Text(
+                          'NO',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: 1.5,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          );
+        },
+      );
     } catch (e) {
       log('Failed to capture picture: $e');
     }
