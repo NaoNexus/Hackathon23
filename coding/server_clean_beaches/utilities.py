@@ -48,8 +48,6 @@ def json_to_beach(json):
             'latitude': json[3],
             'longitude': json[4],
             'details': json[5],
-            'dirtyImageExtension': json[6],
-            'cleanImageExtension': json[7],
             'userReported': json[8],
             'userCleaned': json[9]}
 

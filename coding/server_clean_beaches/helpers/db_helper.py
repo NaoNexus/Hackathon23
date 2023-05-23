@@ -1,7 +1,6 @@
 import psycopg2
 import helpers.config_helper as config_helper
 from helpers.logging_helper import logger
-from helpers.file_helper import FileHelper
 from utilities import json_to_beach, json_to_user
 
 import os
@@ -9,11 +8,7 @@ from datetime import datetime
 
 
 class DB:
-    file_helper: FileHelper
-
     def __init__(self, config: config_helper.Config):
-        self.file_helper = FileHelper()
-
         try:
             self.connection = psycopg2.connect(host=config.db_host, database=config.db_name,
                                                user=config.db_user, password=config.db_password)
@@ -39,8 +34,6 @@ class DB:
                         latitude NUMERIC(8, 6) NOT NULL,
                         longitude NUMERIC(8, 6) NOT NULL,
                         details TEXT NOT NULL,
-                        "dirtyImageExtension" TEXT NOT NULL,
-                        "cleanImageExtension" TEXT,
                         "userReported" TEXT NOT NULL,
                         "userCleaned" TEXT,
                         CONSTRAINT fk_reported_user
@@ -142,9 +135,9 @@ class DB:
 
                 if (report.get('id', '') == ''):
                     cur.execute('''
-                        INSERT INTO Beaches("dateReported", "dateCleaned", latitude, longitude, details, "dirtyImageExtension", "cleanImageExtension", "userReported", "userCleaned")
+                        INSERT INTO Beaches("dateReported", "dateCleaned", latitude, longitude, details, "userReported", "userCleaned")
                         VALUES ( %s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING id; ''',
-                                (report['dateReported'].split('.')[0], report.get('dateCleaned', '').split('.')[0], report['latitude'], report['longitude'], report.get('details', ''), report.get('dirtyImageExtension', ''), report.get('cleanImageExtension', ''), report['userReported'], report.get('userCleaned', None),))
+                                (report['dateReported'].split('.')[0], report.get('dateCleaned', '').split('.')[0], report['latitude'], report['longitude'], report.get('details', ''), report['userReported'], report.get('userCleaned', None),))
 
                     for tupla in cur:
                         report['id'] = tupla[0]
@@ -158,9 +151,9 @@ class DB:
                 else:
                     cur.execute('''
                         UPDATE Beaches
-                        SET "dateReported" = %s, "dateCleaned" = %s, latitude = %s, longitude = %s, details = %s, "dirtyImageExtension" = %s, "cleanImageExtension" = %s, "userReported" = %s, "userCleaned" = %s
+                        SET "dateReported" = %s, "dateCleaned" = %s, latitude = %s, longitude = %s, details = %s, "userReported" = %s, "userCleaned" = %s
                         WHERE id::text = %s; ''',
-                                (report['dateReported'].split('.')[0], report.get('dateCleaned', '').split('.')[0], report['latitude'], report['longitude'], report.get('details', ''), report['dirtyImageExtension'], report.get('cleanImageExtension', ''), report['userReported'], report.get('userCleaned', ''), report['id']))
+                                (report['dateReported'].split('.')[0], report.get('dateCleaned', '').split('.')[0], report['latitude'], report['longitude'], report.get('details', ''), report['userReported'], report.get('userCleaned', ''), report['id']))
 
                     if dirty_image != '' and dirty_image.filename != '':
                         clean_image.save(f"images/{report['id']}/clean.png")
@@ -170,7 +163,7 @@ class DB:
 
                 return cur.statusmessage
 
-    def get_beaches_reports(self, includeImages):
+    def get_beaches_reports(self):
         with self.connection:
             with self.connection.cursor() as cur:
                 data = []
@@ -179,11 +172,7 @@ class DB:
                     ORDER BY "dateReported" ASC;''')
 
                 for tupla in cur:
-                    beach_report = json_to_beach(tupla)
-                    if (includeImages):
-                        beach_report = self.file_helper.get_beach_report_images(
-                            beach_report)
-                    data.append(beach_report)
+                    data.append(json_to_beach(tupla))
 
                 return data
 
@@ -199,9 +188,7 @@ class DB:
                 if (cur.rowcount == 0):
                     return {}
                 for tupla in cur:
-                    beach_report = json_to_beach(tupla)
-                    return self.file_helper.save_beach_report_images(
-                        beach_report)
+                    return json_to_beach(tupla)
 
     def delete_beach_report(self, id):
         with self.connection:

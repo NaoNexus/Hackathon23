@@ -33,9 +33,7 @@ class Api {
                 report.dateCleaned?.toIso8601String() ?? ''
             ..fields['userReported'] = report.userReported
             ..fields['userCleaned'] = report.userCleaned
-            ..fields['details'] = report.details
-            ..fields['dirtyImageExtension'] = report.dirtyImageExtension
-            ..fields['cleanImageExtension'] = report.cleanImageExtension;
+            ..fields['details'] = report.details;
 
       if (dirtyImagePath != null && dirtyImagePath.isNotEmpty) {
         request.files.add(

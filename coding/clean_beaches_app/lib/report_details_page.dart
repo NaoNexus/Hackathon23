@@ -171,7 +171,7 @@ class _ReportDetailsPageState extends State<ReportDetailsPage> {
                             child: Column(
                               children: [
                                 Image.network(
-                                  'http://192.168.0.150:5000/images/${widget.report.id}/dirty.${widget.report.dirtyImageExtension}',
+                                  'http://192.168.0.150:5000/images/${widget.report.id}/dirty.png',
                                   fit: BoxFit.cover,
                                   width: double.infinity,
                                 ),
@@ -226,7 +226,7 @@ class _ReportDetailsPageState extends State<ReportDetailsPage> {
                               child: Column(
                                 children: [
                                   Image.network(
-                                    'http://192.168.0.150:5000/images/${widget.report.id}/clean.${widget.report.dirtyImageExtension}',
+                                    'http://192.168.0.150:5000/images/${widget.report.id}/clean.png',
                                     fit: BoxFit.cover,
                                     width: double.infinity,
                                   ),

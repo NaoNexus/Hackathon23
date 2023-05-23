@@ -39,7 +39,6 @@ class _HomePageState extends State<HomePage> {
     _reports = _api.getReports();
     _timer = Timer.periodic(const Duration(seconds: 5), (timer) {
       setState(() {
-        print('0a');
         _reports = _api.getReports();
       });
     });
@@ -254,8 +253,6 @@ class _HomePageState extends State<HomePage> {
                     dateReported: DateTime.now(),
                     userReported: nickname,
                     userCleaned: '',
-                    cleanImageExtension: 'png',
-                    dirtyImageExtension: 'png',
                     details: details!,
                     position: LatLng(location.latitude, location.longitude),
                   );
