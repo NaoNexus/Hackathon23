@@ -19,7 +19,7 @@ class CsvHelper:
     def get_csv(self, index):
         json = []
 
-        with open(f'/csv/boat_{index}.csv', newline="\n") as file:
+        with open(f'csv/boat_{index}.csv', newline="\n") as file:
             boats = csv.reader(file, delimiter=";")
             next(boats)
 
@@ -47,10 +47,20 @@ class CsvHelper:
         elif fuel_type == 'benzina':
             pollution = 3
 
-        if boat_type == 'peschereccio':
+        if boat_type == 'motoscafo':
+            pollution *= 1.5
+        elif boat_type == 'peschereccio':
             pollution *= 2
+        elif boat_type == 'traghetto':
+            pollution *= 2.5
         elif boat_type == 'crociera':
             pollution *= 4
+        elif boat_type == 'container_cargo':
+            pollution *= 5
+        elif boat_type == 'gas_cargo':
+            pollution *= 5
+        elif boat_type == 'veicoli_cargo':
+            pollution *= 5.5
 
         return pollution
 

@@ -136,7 +136,7 @@ class DB:
                 if (report.get('id', '') == ''):
                     cur.execute('''
                         INSERT INTO Beaches("dateReported", "dateCleaned", latitude, longitude, details, "userReported", "userCleaned")
-                        VALUES ( %s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING id; ''',
+                        VALUES ( %s, %s, %s, %s, %s, %s, %s) RETURNING id; ''',
                                 (report['dateReported'].split('.')[0], report.get('dateCleaned', '').split('.')[0], report['latitude'], report['longitude'], report.get('details', ''), report['userReported'], report.get('userCleaned', None),))
 
                     for tupla in cur:

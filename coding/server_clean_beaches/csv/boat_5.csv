@@ -1,4 +1,7 @@
-boat_id;boat_lat;boat_long;boat_type;boat_fuel;
-1;45.228565, 12.323472;peschereccio;diesel;
-2;45.232802;12.288210;crociera;gnl;
-3;45.219061;12.307821;motoscafo;benzina;
+boat_id;boat_lat;boat_long;boat_type;boat_fuel
+1;45.006170;12.564634;peschereccio;diesel
+2;45.005437;12.431895;motoscafo;benzina
+3;45.003337;12.831653;container_cargo;benzina
+4;45.007437;12.587695;gas_cargo;benzina
+5;45.223237;12.731675;veicoli_cargo;benzina
+6;45.242637;12.631876;traghetto;diesel

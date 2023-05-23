@@ -39,7 +39,7 @@
     <script type="text/javascript">
         var markers = [], reports = [], boats = [], boatsMarkers = []
         var map
-        var cleanIcon, dirtyIcon
+        var cleanIcon, dirtyIcon, boatIcon
         var selectedReport = undefined
 
         var detailsDiv
@@ -70,6 +70,13 @@
                 iconAnchor: [20, 20], // point of the icon which will correspond to marker's location
             });
 
+            boatIcon = L.icon({
+                iconUrl: '/static/images/boat.png',
+
+                iconSize: [25, 25], // size of the icon
+                iconAnchor: [12.5, 12.5], // point of the icon which will correspond to marker's location
+            });
+
             setInterval(loadMarkers, 5000)
             setInterval(loadBoats, 10000)
         }
@@ -93,11 +100,11 @@
                 map.removeLayer(marker)
             }
 
-            let response = await fetch('http://192.168.0.150:5000/api/boats')
+            let response = await fetch('http://localhost:5000/api/boats')
             boats = (await response.json())['data']
             console.log(boats)
             for (let boat of boats) {
-                let marker = L.marker([parseFloat(boat['latitude']), parseFloat(boat['longitude'])], /*TODO: ADD ICON*/).addTo(map);
+                let marker = L.marker([parseFloat(boat['latitude']), parseFloat(boat['longitude'])], { icon: boatIcon }).addTo(map);
                 boatsMarkers.push(marker)
             }
         }
