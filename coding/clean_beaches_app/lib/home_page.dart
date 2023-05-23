@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:clean_beaches_app/api.dart';
+import 'package:clean_beaches_app/award_page.dart';
 import 'package:clean_beaches_app/camera_screen.dart';
 import 'package:clean_beaches_app/relative_date.dart';
 import 'package:clean_beaches_app/report.dart';
@@ -156,6 +157,44 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                 ),
                               ),
+                              Positioned(
+                                top: 8,
+                                left: 8,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.white.withOpacity(0.8),
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  padding: const EdgeInsets.all(8),
+                                  child: InkWell(
+                                    child: GestureDetector(
+                                      onTap: () async {
+                                        SharedPreferences prefs =
+                                            await SharedPreferences
+                                                .getInstance();
+                                        // ignore: use_build_context_synchronously
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) => AwardPage(
+                                                      numberOfReportsDone:
+                                                          prefs.getInt(
+                                                                  'reported') ??
+                                                              0,
+                                                      numberOfBeachesCleaned:
+                                                          prefs.getInt(
+                                                                  'cleaned') ??
+                                                              0,
+                                                    )));
+                                      },
+                                      child: const Icon(
+                                        Icons.workspace_premium,
+                                        color: Colors.blue,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
                             ],
                           ),
                         ),
@@ -257,11 +296,14 @@ class _HomePageState extends State<HomePage> {
                     position: LatLng(location.latitude, location.longitude),
                   );
 
+                  // ignore: use_build_context_synchronously
                   _api.sendReport(
                     context: context,
                     report: report,
                     dirtyImagePath: filePath,
                   );
+
+                  prefs.setInt('reported', (prefs.getInt('reported') ?? 0) + 1);
                 },
               ),
             ),
