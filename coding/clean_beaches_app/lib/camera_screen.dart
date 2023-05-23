@@ -132,6 +132,8 @@ class _CameraScreenState extends State<CameraScreen> {
                   Flexible(
                     child: GestureDetector(
                       onTap: () {
+                        image.saveTo(filePath);
+
                         if (widget.detailsField) {
                           widget.onSubmit(filePath, _detailsController.text);
                         } else {
