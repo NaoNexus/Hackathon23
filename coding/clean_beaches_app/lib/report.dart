@@ -4,7 +4,6 @@ class Report {
   final String id;
   final LatLng position;
   final String details, userReported, userCleaned;
-  final String dirtyImageExtension, cleanImageExtension;
   final DateTime dateReported;
   final DateTime? dateCleaned;
 
@@ -16,8 +15,6 @@ class Report {
     required this.userCleaned,
     required this.userReported,
     required this.details,
-    required this.dirtyImageExtension,
-    required this.cleanImageExtension,
   });
 
   Report copyWith({
@@ -28,8 +25,6 @@ class Report {
     String? userReported,
     String? userCleaned,
     String? details,
-    String? dirtyImageExtension,
-    String? cleanImageExtension,
   }) =>
       Report(
         id: id ?? this.id,
@@ -39,8 +34,6 @@ class Report {
         userReported: userReported ?? this.userReported,
         userCleaned: userCleaned ?? this.userCleaned,
         details: details ?? this.details,
-        dirtyImageExtension: dirtyImageExtension ?? this.dirtyImageExtension,
-        cleanImageExtension: cleanImageExtension ?? this.cleanImageExtension,
       );
 
   factory Report.fromJson(Map<String, dynamic> json) => Report(
@@ -51,7 +44,5 @@ class Report {
         userCleaned: json['userCleaned'] ?? '',
         userReported: json['userReported'],
         details: json['details'],
-        dirtyImageExtension: json['dirtyImageExtension'],
-        cleanImageExtension: json['cleanImageExtension'],
       );
 }

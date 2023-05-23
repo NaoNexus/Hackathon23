@@ -10,8 +10,6 @@ final testData = [
     userCleaned: '',
     userReported: 'ric',
     details: 'Spiaggia della morte',
-    dirtyImageExtension: 'png',
-    cleanImageExtension: 'png',
   ),
   Report(
     id: '11dd',
@@ -21,8 +19,6 @@ final testData = [
     userCleaned: 'marco',
     userReported: 'ric',
     details: 'Spiaggia della morte 2',
-    dirtyImageExtension: 'png',
-    cleanImageExtension: 'png',
   ),
   Report(
     id: '10dd',
@@ -31,8 +27,6 @@ final testData = [
     userCleaned: '',
     userReported: 'ric',
     details: 'Spiaggia della morte 3',
-    dirtyImageExtension: 'png',
-    cleanImageExtension: 'png',
   ),
 ];
 
