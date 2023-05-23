@@ -86,13 +86,15 @@ class _CameraScreenState extends State<CameraScreen> {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: const Text('Send image?'),
+            contentPadding: const EdgeInsets.all(8),
+            actionsPadding: const EdgeInsets.only(bottom: 8, left: 8, right: 8),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
             content: ClipRRect(
               borderRadius: BorderRadius.circular(8.0),
               child: Image.file(
                 File(image.path),
-                width: 200,
-                height: 200,
               ),
             ),
             actions: [
@@ -101,54 +103,61 @@ class _CameraScreenState extends State<CameraScreen> {
                   Flexible(
                     child: GestureDetector(
                       onTap: () {
-                        if (widget.detailsField) {
-                          widget.onSubmit(filePath, _detailsController.text);
-                          Navigator.pop(context);
-                          Navigator.pop(context);
-                          return;
-                        }
-
-                        widget.onSubmit(filePath, null);
+                        Navigator.pop(context);
                       },
                       child: Container(
                         decoration: BoxDecoration(
-                          color: const Color.fromARGB(255, 122, 195, 125),
-                          borderRadius: BorderRadius.circular(12),
+                          color: Colors.transparent,
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
                         ),
                         width: double.infinity,
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        child: const Text(
-                          'YES',
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        child: Text(
+                          'CANCEL',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
                             letterSpacing: 1.5,
+                            color: Theme.of(context).colorScheme.primary,
                           ),
                         ),
                       ),
                     ),
                   ),
-                  const SizedBox(width: 20),
+                  const SizedBox(width: 8),
                   Flexible(
                     child: GestureDetector(
                       onTap: () {
+                        image.saveTo(filePath);
+
+                        if (widget.detailsField) {
+                          widget.onSubmit(filePath, _detailsController.text);
+                        } else {
+                          widget.onSubmit(filePath, null);
+                        }
+
+                        Navigator.pop(context);
                         Navigator.pop(context);
                       },
                       child: Container(
                         decoration: BoxDecoration(
-                          color: Color.fromARGB(255, 229, 113, 104),
-                          borderRadius: BorderRadius.circular(12),
+                          color: Theme.of(context).colorScheme.primary,
+                          borderRadius: BorderRadius.circular(8),
                         ),
                         width: double.infinity,
-                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        padding: const EdgeInsets.symmetric(vertical: 12),
                         child: const Text(
-                          'NO',
+                          'CONFIRM',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
                             letterSpacing: 1.5,
+                            color: Colors.white,
                           ),
                         ),
                       ),

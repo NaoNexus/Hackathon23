@@ -168,56 +168,55 @@ class _ReportDetailsPageState extends State<ReportDetailsPage> {
                             decoration: BoxDecoration(
                               color: Colors.grey.shade50,
                             ),
-                            child: Column(children: [
-                              Image.network(
-                                'http://192.168.0.150:5000/images/${widget.report.id}/dirty.${widget.report.dirtyImageExtension}',
-                                fit: BoxFit.cover,
-                                width: double.infinity,
-                              ),
-                              const Text(
-                                'DIRTY IMAGE',
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  letterSpacing: 1.25,
-                                  fontWeight: FontWeight.w600,
+                            child: Column(
+                              children: [
+                                Image.network(
+                                  'http://192.168.0.150:5000/images/${widget.report.id}/dirty.${widget.report.dirtyImageExtension}',
+                                  fit: BoxFit.cover,
+                                  width: double.infinity,
                                 ),
-                              ),
-                            ]),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Row(
+                                    children: [
+                                      Icon(
+                                        Icons.account_circle_outlined,
+                                        size: 16,
+                                        color: Colors.grey.shade500,
+                                      ),
+                                      const SizedBox(width: 4),
+                                      Text(
+                                        widget.report.userReported,
+                                        style: const TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                      const Spacer(),
+                                      Icon(
+                                        Icons.calendar_today,
+                                        size: 16,
+                                        color: Colors.grey.shade500,
+                                      ),
+                                      const SizedBox(width: 4),
+                                      Text(
+                                        widget.report.dateReported
+                                            .toString()
+                                            .split('.')[0],
+                                        style: const TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                        const SizedBox(height: 8),
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.account_circle_outlined,
-                              size: 16,
-                              color: Colors.grey.shade500,
-                            ),
-                            Text(
-                              widget.report.userReported,
-                              style: const TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            const Spacer(),
-                            Icon(
-                              Icons.calendar_today,
-                              size: 16,
-                              color: Colors.grey.shade500,
-                            ),
-                            Text(
-                              widget.report.dateReported
-                                  .toString()
-                                  .split('.')[0],
-                              style: const TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ],
-                        ),
-                        if (widget.report.dateCleaned != null)
+                        if (widget.report.dateCleaned != null) ...[
+                          const SizedBox(height: 16),
                           ClipRRect(
                             borderRadius: BorderRadius.circular(8),
                             child: Container(
@@ -231,50 +230,47 @@ class _ReportDetailsPageState extends State<ReportDetailsPage> {
                                     fit: BoxFit.cover,
                                     width: double.infinity,
                                   ),
-                                  const Text(
-                                    'CLEAN IMAGE',
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      letterSpacing: 1.25,
-                                      fontWeight: FontWeight.w600,
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Row(
+                                      children: [
+                                        Icon(
+                                          Icons.account_circle_outlined,
+                                          size: 16,
+                                          color: Colors.grey.shade500,
+                                        ),
+                                        const SizedBox(width: 4),
+                                        Text(
+                                          widget.report.userCleaned,
+                                          style: const TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                        const Spacer(),
+                                        Icon(
+                                          Icons.calendar_today,
+                                          size: 16,
+                                          color: Colors.grey.shade500,
+                                        ),
+                                        const SizedBox(width: 4),
+                                        Text(
+                                          widget.report.dateCleaned
+                                              .toString()
+                                              .split('.')[0],
+                                          style: const TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  Row(
-                                    children: [
-                                      Icon(
-                                        Icons.account_circle_outlined,
-                                        size: 16,
-                                        color: Colors.grey.shade500,
-                                      ),
-                                      Text(
-                                        widget.report.userCleaned,
-                                        style: const TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                      const Spacer(),
-                                      Icon(
-                                        Icons.calendar_today,
-                                        size: 16,
-                                        color: Colors.grey.shade500,
-                                      ),
-                                      Text(
-                                        widget.report.dateCleaned
-                                            .toString()
-                                            .split('.')[0],
-                                        style: const TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ],
                                   ),
                                 ],
                               ),
                             ),
-                          )
+                          ),
+                        ],
                       ],
                     ),
                   ),
