@@ -1,12 +1,13 @@
 from helpers.config_helper import Config
 from helpers.db_helper import DB
 from helpers.logging_helper import logger
+from helpers.csv_helper import CsvHelper
 
 import utilities
 import time
 import os
 
-from flask import Flask, request, current_app, jsonify, render_template, redirect, send_from_directory
+from flask import Flask, request, jsonify, render_template, redirect, send_from_directory
 
 app = Flask(__name__)
 
@@ -138,7 +139,7 @@ def save_beach_report():
             json = request.json
         else:
             json = request.form.to_dict()
-        
+
         return jsonify({'code': 201, 'message': 'OK', 'data': db_helper.save_beach_report(json, request.files.get('dirtyImage', ''), request.files.get('cleanImage', ''))}), 201
     except Exception as e:
         logger.error(str(e))
@@ -193,9 +194,54 @@ def reports():
         return jsonify({'code': 500, 'message': str(e)}), 500
 
 
+@app.route('/api/boats', methods=['GET'])
+def get_boats():
+    try:
+        return jsonify({'code': 200, 'message': 'OK', 'data': csv_helper.get_next_csv()}), 200
+    except Exception as e:
+        logger.error(str(e))
+        return jsonify({'code': 500, 'message': str(e)}), 500
+
+
+@app.route('/api/boats/pollution', methods=['GET'])
+def get_boats_pollution():
+    try:
+        return jsonify({'code': 200, 'message': 'OK', 'data': csv_helper.get_boats_pollution(csv_helper.get_csv(csv_helper.index))}), 200
+    except Exception as e:
+        logger.error(str(e))
+        return jsonify({'code': 500, 'message': str(e)}), 500
+
+
+@app.route('/api/boats/<id>', methods=['GET'])
+def get_boat(id):
+    if (id != None and id != ''):
+        try:
+            return jsonify({'code': 200, 'message': 'OK', 'data': csv_helper.get_csv(int(id))}), 200
+        except Exception as e:
+            logger.error(str(e))
+            return jsonify({'code': 500, 'message': str(e)}), 500
+    else:
+        logger.error('No id argument passed')
+        return jsonify({'code': 500, 'message': 'No id was passed'}), 500
+
+
+@app.route('/api/boats/<id>/pollution', methods=['GET'])
+def get_boat_pollution(id):
+    if (id != None and id != ''):
+        try:
+            return jsonify({'code': 200, 'message': 'OK', 'data': csv_helper.get_boats_pollution(csv_helper.get_csv(int(id)))}), 200
+        except Exception as e:
+            logger.error(str(e))
+            return jsonify({'code': 500, 'message': str(e)}), 500
+    else:
+        logger.error('No id argument passed')
+        return jsonify({'code': 500, 'message': 'No id was passed'}), 500
+
+
 if __name__ == '__main__':
     config_helper = Config()
     db_helper = DB(config_helper)
+    csv_helper = CsvHelper()
 
     startTime = time.time()
 
