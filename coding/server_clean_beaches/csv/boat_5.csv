@@ -1,0 +1,4 @@
+boat_id;boat_lat;boat_long;boat_type;boat_fuel;
+1;45.228565, 12.323472;peschereccio;diesel;
+2;45.232802;12.288210;crociera;gnl;
+3;45.219061;12.307821;motoscafo;benzina;

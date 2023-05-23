@@ -3797,10 +3797,10 @@ input, select, textarea {
 
 	#main > header {
 		padding: 12em 0 10em 0 ;
-		background-image: -moz-linear-gradient(top, rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url("../../images/spiaggia.jpeg");
-		background-image: -webkit-linear-gradient(top, rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url("../../images/spiaggia.jpeg");
-		background-image: -ms-linear-gradient(top, rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url("../../images/spiaggia.jpeg");
-		background-image: linear-gradient(top, rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url("../../images/spiaggia.jpeg");
+		background-image: -moz-linear-gradient(top, rgba(0,0,0,0.25), rgba(0,0,0,0.25)), url("../../images/spiaggia.jpg");
+		background-image: -webkit-linear-gradient(top, rgba(0,0,0,0.25), rgba(0,0,0,0.25)), url("../../images/spiaggia.jpg");
+		background-image: -ms-linear-gradient(top, rgba(0,0,0,0.25), rgba(0,0,0,0.25)), url("../../images/spiaggia.jpg");
+		background-image: linear-gradient(top, rgba(0,0,0,0.25), rgba(0,0,0,0.25)), url("../../images/spiaggia.jpg");
 		background-attachment: fixed;
 		background-position: center center;
 		background-repeat: no-repeat;
@@ -3867,7 +3867,6 @@ input, select, textarea {
 
 	#footer {
 		padding: 6em 0 4em 0 ;
-		background-color: #1d242a;
 		text-align: center;
 	}
 
@@ -3943,10 +3942,10 @@ input, select, textarea {
 /* Landing */
 
 	body.landing #page-wrapper {
-		background-image: -moz-linear-gradient(top, rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url("../../images/spiaggia.jpeg");
-		background-image: -webkit-linear-gradient(top, rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url("../../images/spiaggia.jpeg");
-		background-image: -ms-linear-gradient(top, rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url("../../images/spiaggia.jpeg");
-		background-image: linear-gradient(top, rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url("../../images/spiaggia.jpeg");
+		background-image: -moz-linear-gradient(top, rgba(0,0,0,0.25), rgba(0,0,0,0.25)), url("../../images/spiaggia.jpg");
+		background-image: -webkit-linear-gradient(top, rgba(0,0,0,0.25), rgba(0,0,0,0.25)), url("../../images/spiaggia.jpg");
+		background-image: -ms-linear-gradient(top, rgba(0,0,0,0.25), rgba(0,0,0,0.25)), url("../../images/spiaggia.jpg");
+		background-image: linear-gradient(top, rgba(0,0,0,0.25), rgba(0,0,0,0.25)), url("../../images/spiaggia.jpg");
 		background-attachment: fixed;
 		background-position: center center;
 		background-repeat: no-repeat;
@@ -3955,7 +3954,7 @@ input, select, textarea {
 	}
 
 	body.landing #footer {
-		background-color: rgba(29, 36, 42, 0.9);
+		background-color: rgba(0,0,0,0.25);
 	}
 
 	body.is-mobile.landing #page-wrapper {
@@ -3964,10 +3963,10 @@ input, select, textarea {
 
 	body.is-mobile.landing #banner,
 	body.is-mobile.landing .wrapper.style4 {
-		background-image: -moz-linear-gradient(top, rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url("../../images/spiaggia.jpeg");
-		background-image: -webkit-linear-gradient(top, rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url("../../images/spiaggia.jpeg");
-		background-image: -ms-linear-gradient(top, rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url("../../images/spiaggia.jpeg");
-		background-image: linear-gradient(top, rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url("../../images/spiaggia.jpeg");
+		background-image: -moz-linear-gradient(top, rgba(0,0,0,0.25), rgba(0,0,0,0.25)), url("../../images/spiaggia.jpg");
+		background-image: -webkit-linear-gradient(top, rgba(0,0,0,0.25), rgba(0,0,0,0.25)), url("../../images/spiaggia.jpg");
+		background-image: -ms-linear-gradient(top, rgba(0,0,0,0.25), rgba(0,0,0,0.25)), url("../../images/spiaggia.jpg");
+		background-image: linear-gradient(top, rgba(0,0,0,0.25), rgba(0,0,0,0.25)), url("../../images/spiaggia.jpg");
 		background-position: center center;
 		background-repeat: no-repeat;
 		background-size: cover;

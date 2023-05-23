@@ -37,7 +37,7 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
         integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script type="text/javascript">
-        var markers = [], reports = []
+        var markers = [], reports = [], boats = [], boatsMarkers = []
         var map
         var cleanIcon, dirtyIcon
         var selectedReport = undefined
@@ -54,6 +54,7 @@
             }).addTo(map);
 
             loadMarkers();
+            loadBoats();
 
             cleanIcon = L.icon({
                 iconUrl: '/static/images/beach_clean.png',
@@ -69,7 +70,8 @@
                 iconAnchor: [20, 20], // point of the icon which will correspond to marker's location
             });
 
-            //setInterval(loadMarkers, 5000)
+            setInterval(loadMarkers, 5000)
+            setInterval(loadBoats, 10000)
         }
 
         async function loadMarkers() {
@@ -83,6 +85,20 @@
             for (let report of reports) {
                 let marker = L.marker([parseFloat(report['latitude']), parseFloat(report['longitude'])], { icon: report['dateCleaned'] === '' ? dirtyIcon : cleanIcon, id: report['id'] }).addTo(map).on('click', onMarkerClick);
                 markers.push(marker)
+            }
+        }
+
+        async function loadBoats() {
+            for (let marker of boatsMarkers) {
+                map.removeLayer(marker)
+            }
+
+            let response = await fetch('http://192.168.0.150:5000/api/boats')
+            boats = (await response.json())['data']
+            console.log(boats)
+            for (let boat of boats) {
+                let marker = L.marker([parseFloat(boat['latitude']), parseFloat(boat['longitude'])], /*TODO: ADD ICON*/).addTo(map);
+                boatsMarkers.push(marker)
             }
         }
 

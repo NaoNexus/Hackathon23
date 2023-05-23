@@ -48,8 +48,8 @@ def json_to_beach(json):
             'latitude': json[3],
             'longitude': json[4],
             'details': json[5],
-            'userReported': json[8],
-            'userCleaned': json[9]}
+            'userReported': json[6],
+            'userCleaned': json[7]}
 
 
 def json_to_user(json):
