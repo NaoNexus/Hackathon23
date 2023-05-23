@@ -127,7 +127,7 @@ class DB:
 
                 return cur.statusmessage
 
-    def save_beach_report(self, report, clean_image, dirty_image):
+    def save_beach_report(self, report, dirty_image, clean_image):
         with self.connection:
             with self.connection.cursor() as cur:
                 if (report.get('dateReported', '') == ''):
@@ -141,12 +141,15 @@ class DB:
 
                     for tupla in cur:
                         report['id'] = tupla[0]
+                        
+                    if not os.path.exists(f"images/{report['id']}/"):
+                        os.mkdir(f"images/{report['id']}/")
 
-                    if dirty_image.filename != '':
+                    if dirty_image != '' and dirty_image.filename != '':
                         dirty_image.save(f"images/{report['id']}/dirty.png")
 
-                    if clean_image.filename != '':
-                        dirty_image.save(f"images/{report['id']}/clean.png")
+                    if clean_image != '' and clean_image.filename != '':
+                        clean_image.save(f"images/{report['id']}/clean.png")
 
                 else:
                     cur.execute('''
@@ -154,12 +157,14 @@ class DB:
                         SET "dateReported" = %s, "dateCleaned" = %s, latitude = %s, longitude = %s, details = %s, "userReported" = %s, "userCleaned" = %s
                         WHERE id::text = %s; ''',
                                 (report['dateReported'].split('.')[0], report.get('dateCleaned', '').split('.')[0], report['latitude'], report['longitude'], report.get('details', ''), report['userReported'], report.get('userCleaned', ''), report['id']))
+                    if not os.path.exists(f"images/{report['id']}/"):
+                        os.mkdir(f"images/{report['id']}/")
 
                     if dirty_image != '' and dirty_image.filename != '':
-                        clean_image.save(f"images/{report['id']}/clean.png")
+                        dirty_image.save(f"images/{report['id']}/dirty.png")
 
-                    if clean_image != '' and dirty_image.filename != '':
-                        clean_image.save(f"images/{report['id']}/dirty.png")
+                    if clean_image != '' and clean_image.filename != '':
+                        clean_image.save(f"images/{report['id']}/clean.png")
 
                 return cur.statusmessage
 
@@ -169,7 +174,7 @@ class DB:
                 data = []
                 cur.execute('''
                     SELECT * FROM Beaches
-                    ORDER BY "dateReported" ASC;''')
+                    ORDER BY "dateReported" DESC;''')
 
                 for tupla in cur:
                     data.append(json_to_beach(tupla))
@@ -182,7 +187,7 @@ class DB:
                 cur.execute('''
                     SELECT * FROM Beaches
                     WHERE id::text = %s
-                    ORDER BY "dateReported" ASC;''',
+                    ORDER BY "dateReported" DESC;''',
                             (str(id),))
 
                 if (cur.rowcount == 0):

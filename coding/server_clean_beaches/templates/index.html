@@ -100,7 +100,7 @@
                 map.removeLayer(marker)
             }
 
-            let response = await fetch('http://localhost:5000/api/boats')
+            let response = await fetch('http://192.168.0.150:5000/api/boats')
             boats = (await response.json())['data']
             console.log(boats)
             for (let boat of boats) {

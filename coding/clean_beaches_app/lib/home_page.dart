@@ -297,7 +297,7 @@ class _HomePageState extends State<HomePage> {
                   );
 
                   // ignore: use_build_context_synchronously
-                  _api.sendReport(
+                  await _api.sendReport(
                     context: context,
                     report: report,
                     dirtyImagePath: filePath,
