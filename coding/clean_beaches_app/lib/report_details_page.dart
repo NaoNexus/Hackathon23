@@ -300,12 +300,16 @@ class _ReportDetailsPageState extends State<ReportDetailsPage> {
                           userCleaned: nickname,
                         );
 
+                        // ignore: use_build_context_synchronously
                         await _api.sendReport(
                           context: context,
                           report: report,
                           cleanImagePath: filePath,
                         );
 
+                        prefs.setInt(
+                            'cleaned', (prefs.getInt('cleaned') ?? 0) + 1);
+                        // ignore: use_build_context_synchronously
                         Navigator.pop(context);
                       },
                     ),
