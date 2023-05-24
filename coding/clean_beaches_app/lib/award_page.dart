@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 
+// ignore: must_be_immutable
 class AwardPage extends StatefulWidget {
   AwardPage(
       {super.key,
