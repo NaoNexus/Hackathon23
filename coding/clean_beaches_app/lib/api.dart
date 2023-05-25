@@ -65,52 +65,6 @@ class Api {
     }
   }
 
-  /*void beachCleanedDetails({
-    required String id,
-    required CameraImage image,
-    required DateTime dateCleaned,
-    required LatLng latitude,
-    required LatLng longitude,
-  }) async {
-    try {
-      http.MultipartRequest request =
-          http.MultipartRequest('POST', Uri.http(address, '/api/clean_beach'))
-            ..fields['id'] = id
-            ..fields['photo'] = convertImageToBase64(image).toString()
-            ..fields['dateCleaned'] = dateCleaned.toString()
-            ..fields['latitude'] = latitude.toString()
-            ..fields['longitude'] = longitude.toString();
-
-      await request.send();
-    } catch (e) {
-      log(e.toString());
-    }
-  }
-
-  void dirtyBeachDetails({
-    required String id,
-    required CameraImage image,
-    required DateTime dateReported,
-    required LatLng latitude,
-    required LatLng longitude,
-    required String details,
-  }) async {
-    try {
-      http.MultipartRequest request =
-          http.MultipartRequest('POST', Uri.http(address, '/api/report_beach'))
-            ..fields['id'] = id
-            ..fields['photo'] = convertImageToBase64(image).toString()
-            ..fields['dateReported'] = dateReported.toString()
-            ..fields['latitude'] = latitude.toString()
-            ..fields['longitude'] = longitude.toString()
-            ..fields['details'] = details;
-
-      await request.send();
-    } catch (e) {
-      log(e.toString());
-    }
-  }*/
-
   Future<bool> checkNickname({required String nickname}) async {
     try {
       http.MultipartRequest request =
